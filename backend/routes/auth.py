@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request, session
 
 from backend.db import get_db
+from backend.config import Config
 from backend.utils import hash_password, verify_password
 
 
@@ -44,6 +45,7 @@ def signup():
             "id": user["id"],
             "username": user["username"],
             "email": user["email"],
+            "is_admin": bool(Config.ADMIN_EMAIL and user["email"].lower() == Config.ADMIN_EMAIL),
         },
     }), 201
 
@@ -73,6 +75,7 @@ def login():
             "id": user["id"],
             "username": user["username"],
             "email": user["email"],
+            "is_admin": bool(Config.ADMIN_EMAIL and user["email"].lower() == Config.ADMIN_EMAIL),
         },
     }), 200
 

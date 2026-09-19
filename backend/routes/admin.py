@@ -7,6 +7,14 @@ from backend.db import get_db
 admin_bp = Blueprint("admin", __name__, url_prefix="/api/admin")
 
 
+def is_admin_user(user):
+    return bool(
+        Config.ADMIN_EMAIL
+        and user
+        and user["email"].strip().lower() == Config.ADMIN_EMAIL
+    )
+
+
 @admin_bp.route("/users", methods=["GET"])
 def list_users():
     if not Config.ADMIN_EMAIL or not session.get("user_id"):
@@ -16,7 +24,7 @@ def list_users():
     admin = db.execute(
         "SELECT email FROM users WHERE id = ?", (session["user_id"],)
     ).fetchone()
-    if not admin or admin["email"].lower() != Config.ADMIN_EMAIL:
+    if not is_admin_user(admin):
         return jsonify({"error": "Admin access required."}), 403
 
     users = db.execute(

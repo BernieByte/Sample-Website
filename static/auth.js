@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         setMessage('signupMessage', 'Account created! Redirecting...');
-        window.location.href = '/dashboard';
+        window.location.href = data.user.is_admin ? '/admin' : '/dashboard';
       } catch (error) {
         setMessage('signupMessage', error.message || 'Signup failed.', true);
       }
@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         setMessage('loginMessage', 'Login successful! Redirecting...');
-        window.location.href = '/dashboard';
+        window.location.href = data.user.is_admin ? '/admin' : '/dashboard';
       } catch (error) {
         setMessage('loginMessage', error.message || 'Login failed.', true);
       }

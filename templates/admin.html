@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ByteNest | Admin</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <main class="admin-page">
+    <header class="admin-header">
+      <div>
+        <p class="admin-kicker">ByteNest administration</p>
+        <h1>User accounts</h1>
+        <p class="admin-subtitle">Review registered members and account activity.</p>
+      </div>
+      <div class="admin-actions">
+        <button id="refreshUsers" class="admin-button">Refresh</button>
+        <button id="logoutAdmin" class="admin-button secondary">Log out</button>
+      </div>
+    </header>
+
+    <section class="admin-summary">
+      <span class="admin-summary-label">Registered users</span>
+      <strong id="userCount">-</strong>
+    </section>
+
+    <section class="admin-table-wrap" aria-label="Registered users">
+      <div class="admin-table-heading">
+        <h2>All users</h2>
+        <input id="userSearch" type="search" placeholder="Search users or emails" aria-label="Search users or emails">
+      </div>
+      <p id="adminMessage" class="admin-message" role="status"></p>
+      <div class="admin-table-scroll">
+        <table class="admin-table">
+          <thead>
+            <tr><th>ID</th><th>Username</th><th>Email</th><th>Joined</th></tr>
+          </thead>
+          <tbody id="userTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  <script src="{{ url_for('static', filename='admin.js') }}"></script>
+</body>
+</html>
