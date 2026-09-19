@@ -77,7 +77,12 @@ def login():
     if not user or not verify_password(password, user["password_hash"]):
         return jsonify({"error": "Invalid username/email or password."}), 401
 
-    db.execute("INSERT INTO login_events (user_id) VALUES (?)", (user["id"],))
+    forwarded_for = request.headers.get("X-Forwarded-For", "")
+    ip_address = (forwarded_for.split(",")[0] or request.remote_addr or "Unknown").strip()
+    db.execute(
+        "INSERT INTO login_events (user_id, ip_address) VALUES (?, ?)",
+        (user["id"], ip_address),
+    )
     db.commit()
     session["user_id"] = user["id"]
     return jsonify({

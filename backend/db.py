@@ -86,6 +86,7 @@ def init_db(app):
                 CREATE TABLE IF NOT EXISTS login_events (
                     id SERIAL PRIMARY KEY,
                     user_id INTEGER NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+                    ip_address TEXT,
                     logged_in_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
             """)
@@ -124,10 +125,16 @@ def init_db(app):
                 CREATE TABLE IF NOT EXISTS login_events (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     user_id INTEGER NOT NULL,
+                    ip_address TEXT,
                     logged_in_at TEXT DEFAULT CURRENT_TIMESTAMP,
                     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
                 )
             """)
+
+        try:
+            db.execute("ALTER TABLE login_events ADD COLUMN ip_address TEXT")
+        except Exception:
+            pass
 
         db.commit()
 

@@ -47,7 +47,8 @@ def list_logins():
 
     logins = db.execute(
         """
-        SELECT login_events.id, users.username, users.email, login_events.logged_in_at
+         SELECT login_events.id, users.username, users.email,
+             login_events.ip_address, login_events.logged_in_at
         FROM login_events
         JOIN users ON users.id = login_events.user_id
         ORDER BY login_events.logged_in_at DESC, login_events.id DESC

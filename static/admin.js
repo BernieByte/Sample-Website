@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const renderLogins = (logins) => {
     loginTableBody.innerHTML = '';
     if (!logins.length) {
-      loginTableBody.innerHTML = '<tr><td colspan="3" class="empty-cell">No logins recorded yet.</td></tr>';
+      loginTableBody.innerHTML = '<tr><td colspan="4" class="empty-cell">No logins recorded yet.</td></tr>';
       return;
     }
 
@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
       row.innerHTML = `
         <td class="user-name">${login.username}</td>
         <td>${login.email}</td>
+        <td>${login.ip_address || 'Unavailable'}</td>
         <td>${new Date(login.logged_in_at).toLocaleString()}</td>
       `;
       loginTableBody.appendChild(row);
