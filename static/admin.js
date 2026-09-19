@@ -30,6 +30,19 @@ document.addEventListener('DOMContentLoaded', () => {
     message.className = `admin-message${isError ? ' error' : ''}`;
   };
 
+  const fetchJson = async (url) => {
+    const response = await fetch(url, {
+      headers: { Accept: 'application/json' },
+    });
+    const contentType = response.headers.get('content-type') || '';
+    if (!contentType.includes('application/json')) {
+      throw new Error(`Admin API unavailable (${response.status}). Redeploy the latest Render commit.`);
+    }
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || `Request failed (${response.status}).`);
+    return data;
+  };
+
   const renderUsers = () => {
     const query = search.value.trim().toLowerCase();
     const visibleUsers = users.filter((user) =>
@@ -57,15 +70,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const loadUsers = async () => {
     setMessage('Loading users...');
-    const response = await fetch('/api/admin/users');
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.error || 'Unable to load users.');
+    const data = await fetchJson('/api/admin/users');
     users = data.users || [];
     userCount.textContent = users.length;
     renderUsers();
-    const loginResponse = await fetch('/api/admin/logins');
-    const loginData = await loginResponse.json();
-    if (!loginResponse.ok) throw new Error(loginData.error || 'Unable to load login activity.');
+    const loginData = await fetchJson('/api/admin/logins');
     renderLogins(loginData.logins || []);
     setMessage(`Updated ${new Date().toLocaleTimeString()}.`);
   };
