@@ -23,13 +23,18 @@ def create_file():
         return jsonify({"error": "Title is required."}), 400
 
     db = get_db()
-    db.execute(
-        "INSERT INTO files (user_id, title, content) VALUES (?, ?, ?)",
-        (session["user_id"], title, content),
-    )
+    if db.postgres:
+        file_id = db.execute(
+            "INSERT INTO files (user_id, title, content) VALUES (?, ?, ?) RETURNING id",
+            (session["user_id"], title, content),
+        ).fetchone()["id"]
+    else:
+        db.execute(
+            "INSERT INTO files (user_id, title, content) VALUES (?, ?, ?)",
+            (session["user_id"], title, content),
+        )
+        file_id = db.execute("SELECT last_insert_rowid() AS id").fetchone()["id"]
     db.commit()
-
-    file_id = db.execute("SELECT last_insert_rowid() AS id").fetchone()["id"]
     file_item = db.execute(
         "SELECT * FROM files WHERE id = ? AND user_id = ?",
         (file_id, session["user_id"]),

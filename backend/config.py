@@ -7,5 +7,7 @@ DB_PATH = os.path.join(DATA_DIR, "byte_nest.db")
 
 class Config:
     SECRET_KEY = os.environ.get("SECRET_KEY", "replace-with-strong-secret-key")
+    DATABASE_URL = os.environ.get("DATABASE_URL")
+    ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "").strip().lower()
     DATABASE_PATH = DB_PATH
     JSON_SORT_KEYS = False

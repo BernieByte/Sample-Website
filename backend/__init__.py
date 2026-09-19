@@ -4,6 +4,7 @@ from flask import Flask
 
 from .config import Config
 from .db import init_db
+from .routes.admin import admin_bp
 from .routes.auth import auth_bp
 from .routes.files import files_bp
 from .routes.views import views_bp
@@ -20,6 +21,7 @@ def create_app():
 
     init_db(app)
 
+    app.register_blueprint(admin_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(files_bp)
     app.register_blueprint(views_bp)
