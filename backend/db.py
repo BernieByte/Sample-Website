@@ -68,6 +68,7 @@ def init_db(app):
                     id SERIAL PRIMARY KEY,
                     user_id INTEGER NOT NULL REFERENCES users (id) ON DELETE CASCADE,
                     title TEXT NOT NULL,
+                    folder TEXT NOT NULL DEFAULT '',
                     content TEXT NOT NULL DEFAULT '',
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -88,12 +89,18 @@ def init_db(app):
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     user_id INTEGER NOT NULL,
                     title TEXT NOT NULL,
+                    folder TEXT NOT NULL DEFAULT '',
                     content TEXT NOT NULL DEFAULT '',
                     created_at TEXT DEFAULT CURRENT_TIMESTAMP,
                     updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
                     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
                 )
             """)
+
+        try:
+            db.execute("ALTER TABLE files ADD COLUMN folder TEXT NOT NULL DEFAULT ''")
+        except Exception:
+            pass
 
         db.commit()
 

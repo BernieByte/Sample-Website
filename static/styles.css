@@ -344,6 +344,27 @@ h1 {
   color: white;
 }
 
+.sidebar-filter {
+  display: block;
+  margin-top: 18px;
+  color: rgba(255,255,255,0.72);
+  font-size: 0.78rem;
+}
+
+.sidebar-filter span {
+  display: block;
+  margin-bottom: 7px;
+}
+
+.sidebar-filter input {
+  width: 100%;
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 8px;
+  padding: 9px 10px;
+  background: rgba(255,255,255,0.1);
+  color: white;
+}
+
 .user-box {
   margin-top: 30px;
   padding-top: 18px;
@@ -417,10 +438,25 @@ h1 {
 }
 
 .editor-toolbar input {
-  flex: 1;
+  min-width: 0;
   border: 1px solid var(--line);
   border-radius: 10px;
   padding: 11px 12px;
+}
+
+.editor-toolbar input:first-child {
+  flex: 1;
+}
+
+.editor-toolbar input:nth-child(2) {
+  width: 130px;
+}
+
+.save-status {
+  min-height: 18px;
+  margin: 8px 2px 0;
+  color: var(--muted);
+  font-size: 0.82rem;
 }
 
 .editor-button.danger {

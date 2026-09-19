@@ -17,6 +17,7 @@ def require_login():
 def create_file():
     data = request.get_json(silent=True) or {}
     title = (data.get("title") or "Untitled").strip()
+    folder = (data.get("folder") or "").strip()
     content = data.get("content") or ""
 
     if not title:
@@ -25,13 +26,13 @@ def create_file():
     db = get_db()
     if db.postgres:
         file_id = db.execute(
-            "INSERT INTO files (user_id, title, content) VALUES (?, ?, ?) RETURNING id",
-            (session["user_id"], title, content),
+            "INSERT INTO files (user_id, title, folder, content) VALUES (?, ?, ?, ?) RETURNING id",
+            (session["user_id"], title, folder, content),
         ).fetchone()["id"]
     else:
         db.execute(
-            "INSERT INTO files (user_id, title, content) VALUES (?, ?, ?)",
-            (session["user_id"], title, content),
+            "INSERT INTO files (user_id, title, folder, content) VALUES (?, ?, ?, ?)",
+            (session["user_id"], title, folder, content),
         )
         file_id = db.execute("SELECT last_insert_rowid() AS id").fetchone()["id"]
     db.commit()
@@ -82,6 +83,8 @@ def update_file(file_id):
     if not file_item:
         return jsonify({"error": "File not found."}), 404
 
+    folder = (data.get("folder") or file_item["folder"] or "").strip()
+
     if title:
         file_item_title = title
     else:
@@ -93,8 +96,8 @@ def update_file(file_id):
         file_item_content = content
 
     db.execute(
-        "UPDATE files SET title = ?, content = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND user_id = ?",
-        (file_item_title, file_item_content, file_id, session["user_id"]),
+        "UPDATE files SET title = ?, folder = ?, content = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND user_id = ?",
+        (file_item_title, folder, file_item_content, file_id, session["user_id"]),
     )
     db.commit()
 
@@ -104,6 +107,36 @@ def update_file(file_id):
     ).fetchone()
 
     return jsonify({"message": "File updated successfully.", "file": dict(updated)}), 200
+
+
+@files_bp.route("/files/<int:file_id>/duplicate", methods=["POST"])
+def duplicate_file(file_id):
+    db = get_db()
+    source = db.execute(
+        "SELECT * FROM files WHERE id = ? AND user_id = ?",
+        (file_id, session["user_id"]),
+    ).fetchone()
+    if not source:
+        return jsonify({"error": "File not found."}), 404
+
+    title = f"Copy of {source['title']}"
+    if db.postgres:
+        new_id = db.execute(
+            "INSERT INTO files (user_id, title, folder, content) VALUES (?, ?, ?, ?) RETURNING id",
+            (session["user_id"], title, source["folder"], source["content"]),
+        ).fetchone()["id"]
+    else:
+        db.execute(
+            "INSERT INTO files (user_id, title, folder, content) VALUES (?, ?, ?, ?)",
+            (session["user_id"], title, source["folder"], source["content"]),
+        )
+        new_id = db.execute("SELECT last_insert_rowid() AS id").fetchone()["id"]
+    db.commit()
+    duplicate = db.execute(
+        "SELECT * FROM files WHERE id = ? AND user_id = ?",
+        (new_id, session["user_id"]),
+    ).fetchone()
+    return jsonify({"message": "File duplicated successfully.", "file": dict(duplicate)}), 201
 
 
 @files_bp.route("/files/<int:file_id>", methods=["DELETE"])

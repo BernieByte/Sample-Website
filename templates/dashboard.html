@@ -19,6 +19,11 @@
       <button id="newFileBtn" class="sidebar-button primary">+ New file</button>
       <button id="logoutBtn" class="sidebar-button secondary">Log out</button>
 
+      <label class="sidebar-filter">
+        <span>Search files</span>
+        <input id="fileSearch" type="search" placeholder="Search by title or folder">
+      </label>
+
       <div class="user-box">
         <small>Signed in as</small>
         <strong id="dashboardUser">User</strong>
@@ -36,11 +41,14 @@
     <section class="editor-panel">
       <div class="editor-toolbar">
         <input id="fileTitle" type="text" placeholder="Untitled document" />
+        <input id="fileFolder" type="text" placeholder="Folder" />
         <button id="saveFileBtn" class="editor-button">Save</button>
+        <button id="duplicateFileBtn" class="editor-button secondary">Duplicate</button>
         <button id="deleteFileBtn" class="editor-button danger">Delete</button>
       </div>
 
       <textarea id="editor" placeholder="Start writing..."></textarea>
+      <p id="saveStatus" class="save-status" aria-live="polite"></p>
     </section>
   </div>
 
