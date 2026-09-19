@@ -36,9 +36,11 @@ def signup():
     if existing_user:
         return jsonify({"error": "User with this username or email already exists."}), 409
 
+    forwarded_for = request.headers.get("X-Forwarded-For", "")
+    signup_ip = (forwarded_for.split(",")[0] or request.remote_addr or "Unknown").strip()
     db.execute(
-        "INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)",
-        (username, email, hash_password(password)),
+        "INSERT INTO users (username, email, password_hash, signup_ip) VALUES (?, ?, ?, ?)",
+        (username, email, hash_password(password), signup_ip),
     )
     db.commit()
 

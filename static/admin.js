@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
     tableBody.innerHTML = '';
 
     if (!visibleUsers.length) {
-      tableBody.innerHTML = '<tr><td colspan="4" class="empty-cell">No matching users.</td></tr>';
+      tableBody.innerHTML = '<tr><td colspan="5" class="empty-cell">No matching users.</td></tr>';
       return;
     }
 
@@ -48,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <td>${user.id}</td>
         <td class="user-name">${user.username}</td>
         <td>${user.email}</td>
+        <td>${user.signup_ip || 'Unavailable'}</td>
         <td>${new Date(user.created_at).toLocaleString()}</td>
       `;
       tableBody.appendChild(row);

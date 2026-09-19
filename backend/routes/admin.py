@@ -28,7 +28,7 @@ def list_users():
         return jsonify({"error": "Admin access required."}), 403
 
     users = db.execute(
-        "SELECT id, username, email, created_at FROM users ORDER BY created_at DESC"
+        "SELECT id, username, email, signup_ip, created_at FROM users ORDER BY created_at DESC"
     ).fetchall()
     return jsonify({"users": [dict(user) for user in users]}), 200
 

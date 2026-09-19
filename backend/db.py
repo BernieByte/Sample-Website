@@ -60,6 +60,7 @@ def init_db(app):
                     username TEXT NOT NULL UNIQUE,
                     email TEXT NOT NULL UNIQUE,
                     password_hash TEXT NOT NULL,
+                    signup_ip TEXT,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
             """)
@@ -97,6 +98,7 @@ def init_db(app):
                     username TEXT NOT NULL UNIQUE,
                     email TEXT NOT NULL UNIQUE,
                     password_hash TEXT NOT NULL,
+                    signup_ip TEXT,
                     created_at TEXT DEFAULT CURRENT_TIMESTAMP
                 )
             """)
@@ -133,6 +135,11 @@ def init_db(app):
 
         try:
             db.execute("ALTER TABLE login_events ADD COLUMN ip_address TEXT")
+        except Exception:
+            pass
+
+        try:
+            db.execute("ALTER TABLE users ADD COLUMN signup_ip TEXT")
         except Exception:
             pass
 
