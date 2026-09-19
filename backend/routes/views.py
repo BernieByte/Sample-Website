@@ -27,6 +27,16 @@ def signup_page():
     return render_template("templates/signup.html")
 
 
+@views_bp.route("/forgot-password")
+def forgot_password_page():
+    return render_template("templates/forgot-password.html")
+
+
+@views_bp.route("/reset-password")
+def reset_password_page():
+    return render_template("templates/reset-password.html")
+
+
 @views_bp.route("/dashboard")
 def dashboard():
     if "user_id" not in session:

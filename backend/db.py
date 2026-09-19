@@ -68,10 +68,18 @@ def init_db(app):
                     id SERIAL PRIMARY KEY,
                     user_id INTEGER NOT NULL REFERENCES users (id) ON DELETE CASCADE,
                     title TEXT NOT NULL,
-                    folder TEXT NOT NULL DEFAULT '',
                     content TEXT NOT NULL DEFAULT '',
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            """)
+            db.execute("""
+                CREATE TABLE IF NOT EXISTS password_resets (
+                    id SERIAL PRIMARY KEY,
+                    user_id INTEGER NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+                    token_hash TEXT NOT NULL UNIQUE,
+                    expires_at TIMESTAMP NOT NULL,
+                    used_at TIMESTAMP NULL
                 )
             """)
         else:
@@ -89,18 +97,22 @@ def init_db(app):
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     user_id INTEGER NOT NULL,
                     title TEXT NOT NULL,
-                    folder TEXT NOT NULL DEFAULT '',
                     content TEXT NOT NULL DEFAULT '',
                     created_at TEXT DEFAULT CURRENT_TIMESTAMP,
                     updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
                     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
                 )
             """)
-
-        try:
-            db.execute("ALTER TABLE files ADD COLUMN folder TEXT NOT NULL DEFAULT ''")
-        except Exception:
-            pass
+            db.execute("""
+                CREATE TABLE IF NOT EXISTS password_resets (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER NOT NULL,
+                    token_hash TEXT NOT NULL UNIQUE,
+                    expires_at TEXT NOT NULL,
+                    used_at TEXT NULL,
+                    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+                )
+            """)
 
         db.commit()
 

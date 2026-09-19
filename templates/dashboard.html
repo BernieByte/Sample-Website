@@ -21,13 +21,21 @@
 
       <label class="sidebar-filter">
         <span>Search files</span>
-        <input id="fileSearch" type="search" placeholder="Search by title or folder">
+        <input id="fileSearch" type="search" placeholder="Search files">
       </label>
 
       <div class="user-box">
         <small>Signed in as</small>
         <strong id="dashboardUser">User</strong>
       </div>
+
+      <form id="changePasswordForm" class="password-form">
+        <h3>Change password</h3>
+        <input id="currentPassword" type="password" placeholder="Current password" required>
+        <input id="newPassword" type="password" placeholder="New password (8+ characters)" minlength="8" required>
+        <button type="submit" class="sidebar-button secondary">Update password</button>
+        <p id="passwordMessage" class="password-message" role="status"></p>
+      </form>
     </aside>
 
     <main class="workspace">
@@ -41,7 +49,6 @@
     <section class="editor-panel">
       <div class="editor-toolbar">
         <input id="fileTitle" type="text" placeholder="Untitled document" />
-        <input id="fileFolder" type="text" placeholder="Folder" />
         <button id="saveFileBtn" class="editor-button">Save</button>
         <button id="duplicateFileBtn" class="editor-button secondary">Duplicate</button>
         <button id="deleteFileBtn" class="editor-button danger">Delete</button>

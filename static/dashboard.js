@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   const fileListEl = document.getElementById('fileList');
   const dashboardUserEl = document.getElementById('dashboardUser');
   const fileTitleEl = document.getElementById('fileTitle');
-  const fileFolderEl = document.getElementById('fileFolder');
   const editorEl = document.getElementById('editor');
   const saveFileBtn = document.getElementById('saveFileBtn');
   const duplicateFileBtn = document.getElementById('duplicateFileBtn');
@@ -11,6 +10,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   const logoutBtn = document.getElementById('logoutBtn');
   const fileSearchEl = document.getElementById('fileSearch');
   const saveStatusEl = document.getElementById('saveStatus');
+  const changePasswordForm = document.getElementById('changePasswordForm');
+  const passwordMessageEl = document.getElementById('passwordMessage');
 
   let selectedFileId = null;
   let files = [];
@@ -58,7 +59,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     fileListEl.innerHTML = '';
     const query = fileSearchEl.value.trim().toLowerCase();
     const visibleFiles = files.filter((file) =>
-      `${file.title} ${file.folder || ''}`.toLowerCase().includes(query)
+      file.title.toLowerCase().includes(query)
     );
 
     if (!visibleFiles.length) {
@@ -71,7 +72,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       item.className = 'file-item' + (file.id === selectedFileId ? ' active' : '');
       item.innerHTML = `
         <h4>${file.title}</h4>
-        <small>${file.folder || 'No folder'} · ${new Date(file.updated_at).toLocaleString()}</small>
+        <small>${new Date(file.updated_at).toLocaleString()}</small>
       `;
       item.addEventListener('click', () => openFile(file.id, file.title, file.content));
       fileListEl.appendChild(item);
@@ -87,7 +88,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   const openFile = (fileId, title, content) => {
     selectedFileId = fileId;
     fileTitleEl.value = title;
-    fileFolderEl.value = files.find((file) => file.id === fileId)?.folder || '';
     editorEl.value = content || '';
     saveStatusEl.textContent = '';
     renderFiles();
@@ -96,7 +96,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   const createNewFile = () => {
     selectedFileId = null;
     fileTitleEl.value = '';
-    fileFolderEl.value = '';
     editorEl.value = '';
     saveStatusEl.textContent = 'New file';
     fileTitleEl.focus();
@@ -104,7 +103,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const saveFile = async () => {
     const title = fileTitleEl.value.trim() || 'Untitled document';
-    const folder = fileFolderEl.value.trim();
     const content = editorEl.value;
     saveStatusEl.textContent = 'Saving...';
 
@@ -113,13 +111,13 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (selectedFileId) {
         data = await fetchJson(`/api/files/${selectedFileId}`, {
           method: 'PUT',
-          body: JSON.stringify({ title, folder, content }),
+          body: JSON.stringify({ title, content }),
         });
         notify('File updated successfully.');
       } else {
         data = await fetchJson('/api/files', {
           method: 'POST',
-          body: JSON.stringify({ title, folder, content }),
+          body: JSON.stringify({ title, content }),
         });
         notify('File saved successfully.');
       }
@@ -168,7 +166,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       await fetchJson(`/api/files/${selectedFileId}`, { method: 'DELETE' });
       selectedFileId = null;
       fileTitleEl.value = '';
-      fileFolderEl.value = '';
       editorEl.value = '';
       notify('File deleted.');
       await loadFiles();
@@ -185,14 +182,34 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   };
 
+  const changePassword = async (event) => {
+    event.preventDefault();
+    passwordMessageEl.textContent = 'Updating...';
+    passwordMessageEl.classList.remove('error');
+    try {
+      const data = await fetchJson('/api/password/change', {
+        method: 'POST',
+        body: JSON.stringify({
+          current_password: document.getElementById('currentPassword').value,
+          new_password: document.getElementById('newPassword').value,
+        }),
+      });
+      passwordMessageEl.textContent = data.message;
+      changePasswordForm.reset();
+    } catch (error) {
+      passwordMessageEl.textContent = error.message;
+      passwordMessageEl.classList.add('error');
+    }
+  };
+
   newFileBtn.addEventListener('click', createNewFile);
   saveFileBtn.addEventListener('click', saveFile);
   duplicateFileBtn.addEventListener('click', duplicateFile);
   deleteFileBtn.addEventListener('click', deleteFile);
   logoutBtn.addEventListener('click', logout);
+  changePasswordForm.addEventListener('submit', changePassword);
   fileSearchEl.addEventListener('input', renderFiles);
   fileTitleEl.addEventListener('input', scheduleAutosave);
-  fileFolderEl.addEventListener('input', scheduleAutosave);
   editorEl.addEventListener('input', scheduleAutosave);
 
   await getUser();
