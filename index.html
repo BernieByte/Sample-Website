@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ByteNest</title>
+    <meta name="description" content="ByteNest is a digital workspace where students can write, save, and organise their work in one place.">
+    <link rel="icon" type="image/png" href="https://img.freepik.com/premium-photo/futuristic-logo-design-cutting-edge-tech-logo-abstract-shapes-vibrant-bluesilver-scheme_1245763-85975.jpg?w=2000">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="page-shell">
+        <header class="topbar">
+            <div class="brand">
+                <img class="brand-logo" src="https://img.freepik.com/premium-photo/futuristic-logo-design-cutting-edge-tech-logo-abstract-shapes-vibrant-bluesilver-scheme_1245763-85975.jpg?w=2000" alt="ByteNest logo">
+                <span>ByteNest</span>
+            </div>
+
+            <nav class="nav" aria-label="Main navigation">
+                <a href="/">Home</a>
+                <a href="#">About</a>
+                <a href="/login" class="nav-login">Log In</a>
+                <a href="/signup" class="nav-signup">Sign Up</a>
+            </nav>
+        </header>
+
+        <main class="hero reveal">
+            <section class="content">
+                <div class="eyebrow">Student workspace</div>
+                <h1>Turn your notes into something you can build on.</h1>
+                <p class="subtitle">
+                    Write, save, and organise your work in one smart digital space made for students.
+                </p>
+
+                <div class="actions">
+                    <a href="/signup" class="btn btn-primary">Create an Account</a>
+                    <a href="/login" class="btn btn-secondary">Log In</a>
+                </div>
+            </section>
+        </main>
+
+        <section class="features reveal" aria-label="Website features">
+            <div class="feature-item">
+                <div class="feature-icon">✍️</div>
+                <h3>Write</h3>
+                <p>Create and edit your own notes, essays, and assignments.</p>
+            </div>
+
+            <div class="feature-item">
+                <div class="feature-icon">💾</div>
+                <h3>Save</h3>
+                <p>Keep your work secure in your personal account.</p>
+            </div>
+
+            <div class="feature-item">
+                <div class="feature-icon">🔐</div>
+                <h3>Private</h3>
+                <p>Your files stay connected to you and your study space.</p>
+            </div>
+
+            <div class="feature-item">
+                <div class="feature-icon">📂</div>
+                <h3>Access</h3>
+                <p>Log back in anytime and continue from where you left off.</p>
+            </div>
+        </section>
+    </div>
+
+    <footer class="footer">
+        © 2026 ByteNest | Privacy | Terms | Contact
+    </footer>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
