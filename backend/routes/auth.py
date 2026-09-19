@@ -77,6 +77,8 @@ def login():
     if not user or not verify_password(password, user["password_hash"]):
         return jsonify({"error": "Invalid username/email or password."}), 401
 
+    db.execute("INSERT INTO login_events (user_id) VALUES (?)", (user["id"],))
+    db.commit()
     session["user_id"] = user["id"]
     return jsonify({
         "message": "Logged in successfully.",

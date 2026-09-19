@@ -82,6 +82,13 @@ def init_db(app):
                     used_at TIMESTAMP NULL
                 )
             """)
+            db.execute("""
+                CREATE TABLE IF NOT EXISTS login_events (
+                    id SERIAL PRIMARY KEY,
+                    user_id INTEGER NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+                    logged_in_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            """)
         else:
             db.execute("""
                 CREATE TABLE IF NOT EXISTS users (
@@ -110,6 +117,14 @@ def init_db(app):
                     token_hash TEXT NOT NULL UNIQUE,
                     expires_at TEXT NOT NULL,
                     used_at TEXT NULL,
+                    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+                )
+            """)
+            db.execute("""
+                CREATE TABLE IF NOT EXISTS login_events (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER NOT NULL,
+                    logged_in_at TEXT DEFAULT CURRENT_TIMESTAMP,
                     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
                 )
             """)

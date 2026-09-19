@@ -40,6 +40,20 @@
         </table>
       </div>
     </section>
+
+    <section class="admin-table-wrap" aria-label="Recent login activity">
+      <div class="admin-table-heading">
+        <h2>Recent login activity</h2>
+      </div>
+      <div class="admin-table-scroll">
+        <table class="admin-table">
+          <thead>
+            <tr><th>Username</th><th>Email</th><th>Logged in</th></tr>
+          </thead>
+          <tbody id="loginTableBody"></tbody>
+        </table>
+      </div>
+    </section>
   </main>
   <script src="{{ url_for('static', filename='admin.js') }}"></script>
 </body>

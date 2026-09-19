@@ -1,9 +1,28 @@
 document.addEventListener('DOMContentLoaded', () => {
   const tableBody = document.getElementById('userTableBody');
+  const loginTableBody = document.getElementById('loginTableBody');
   const userCount = document.getElementById('userCount');
   const search = document.getElementById('userSearch');
   const message = document.getElementById('adminMessage');
   let users = [];
+
+  const renderLogins = (logins) => {
+    loginTableBody.innerHTML = '';
+    if (!logins.length) {
+      loginTableBody.innerHTML = '<tr><td colspan="3" class="empty-cell">No logins recorded yet.</td></tr>';
+      return;
+    }
+
+    logins.forEach((login) => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td class="user-name">${login.username}</td>
+        <td>${login.email}</td>
+        <td>${new Date(login.logged_in_at).toLocaleString()}</td>
+      `;
+      loginTableBody.appendChild(row);
+    });
+  };
 
   const setMessage = (text, isError = false) => {
     message.textContent = text;
@@ -42,6 +61,10 @@ document.addEventListener('DOMContentLoaded', () => {
     users = data.users || [];
     userCount.textContent = users.length;
     renderUsers();
+    const loginResponse = await fetch('/api/admin/logins');
+    const loginData = await loginResponse.json();
+    if (!loginResponse.ok) throw new Error(loginData.error || 'Unable to load login activity.');
+    renderLogins(loginData.logins || []);
     setMessage(`Updated ${new Date().toLocaleTimeString()}.`);
   };
 
