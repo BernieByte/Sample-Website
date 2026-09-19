@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ByteNest | Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <div class="dashboard-page">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="brand-inline">
+          <span class="brand-dot"></span>
+          <span>ByteNest</span>
+        </div>
+      </div>
+
+      <button id="newFileBtn" class="sidebar-button primary">+ New file</button>
+      <button id="logoutBtn" class="sidebar-button secondary">Log out</button>
+
+      <div class="user-box">
+        <small>Signed in as</small>
+        <strong id="dashboardUser">User</strong>
+      </div>
+    </aside>
+
+    <main class="workspace">
+      <header class="workspace-topbar">
+        <h2>Your files</h2>
+      </header>
+
+      <div id="fileList" class="file-list"></div>
+    </main>
+
+    <section class="editor-panel">
+      <div class="editor-toolbar">
+        <input id="fileTitle" type="text" placeholder="Untitled document" />
+        <button id="saveFileBtn" class="editor-button">Save</button>
+        <button id="deleteFileBtn" class="editor-button danger">Delete</button>
+      </div>
+
+      <textarea id="editor" placeholder="Start writing..."></textarea>
+    </section>
+  </div>
+
+  <script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+</body>
+</html>

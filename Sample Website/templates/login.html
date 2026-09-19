@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ByteNest | Log In</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <div class="auth-shell">
+    <div class="auth-card">
+      <h1>Log In</h1>
+      <form id="loginForm" class="auth-form">
+        <label>
+          Username or Email
+          <input type="text" id="loginField" name="login" required />
+        </label>
+
+        <label>
+          Password
+          <input type="password" id="loginPassword" name="password" required />
+        </label>
+
+        <button type="submit">Log In</button>
+      </form>
+
+      <p class="auth-switch">
+        Need an account? <a href="/signup">Sign Up</a>
+      </p>
+      <p id="loginMessage" class="message"></p>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='auth.js') }}"></script>
+</body>
+</html>
