@@ -67,6 +67,15 @@ button, input, textarea {
   text-transform: uppercase;
 }
 
+.brand-logo {
+  width: 30px;
+  height: 30px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid rgba(82, 118, 181, 0.25);
+  box-shadow: 0 0 14px rgba(45, 109, 246, 0.28);
+}
+
 .brand-mark {
   width: 12px;
   height: 12px;
