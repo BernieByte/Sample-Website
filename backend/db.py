@@ -133,15 +133,19 @@ def init_db(app):
                 )
             """)
 
-        try:
-            db.execute("ALTER TABLE login_events ADD COLUMN ip_address TEXT")
-        except Exception:
-            pass
+        if db.postgres:
+            db.execute("ALTER TABLE login_events ADD COLUMN IF NOT EXISTS ip_address TEXT")
+            db.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS signup_ip TEXT")
+        else:
+            try:
+                db.execute("ALTER TABLE login_events ADD COLUMN ip_address TEXT")
+            except Exception:
+                pass
 
-        try:
-            db.execute("ALTER TABLE users ADD COLUMN signup_ip TEXT")
-        except Exception:
-            pass
+            try:
+                db.execute("ALTER TABLE users ADD COLUMN signup_ip TEXT")
+            except Exception:
+                pass
 
         db.commit()
 
