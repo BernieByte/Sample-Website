@@ -61,6 +61,9 @@ def init_db(app):
                     email TEXT NOT NULL UNIQUE,
                     password_hash TEXT NOT NULL,
                     signup_ip TEXT,
+                    signup_town TEXT,
+                    signup_country TEXT,
+                    signup_state TEXT,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
             """)
@@ -99,6 +102,9 @@ def init_db(app):
                     email TEXT NOT NULL UNIQUE,
                     password_hash TEXT NOT NULL,
                     signup_ip TEXT,
+                    signup_town TEXT,
+                    signup_country TEXT,
+                    signup_state TEXT,
                     created_at TEXT DEFAULT CURRENT_TIMESTAMP
                 )
             """)
@@ -135,7 +141,13 @@ def init_db(app):
 
         if db.postgres:
             db.execute("ALTER TABLE login_events ADD COLUMN IF NOT EXISTS ip_address TEXT")
+            db.execute("ALTER TABLE login_events ADD COLUMN IF NOT EXISTS town TEXT")
+            db.execute("ALTER TABLE login_events ADD COLUMN IF NOT EXISTS country TEXT")
+            db.execute("ALTER TABLE login_events ADD COLUMN IF NOT EXISTS state TEXT")
             db.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS signup_ip TEXT")
+            db.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS signup_town TEXT")
+            db.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS signup_country TEXT")
+            db.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS signup_state TEXT")
         else:
             try:
                 db.execute("ALTER TABLE login_events ADD COLUMN ip_address TEXT")
@@ -146,6 +158,17 @@ def init_db(app):
                 db.execute("ALTER TABLE users ADD COLUMN signup_ip TEXT")
             except Exception:
                 pass
+
+            for column in ("town", "country", "state"):
+                try:
+                    db.execute(f"ALTER TABLE login_events ADD COLUMN {column} TEXT")
+                except Exception:
+                    pass
+            for column in ("signup_town", "signup_country", "signup_state"):
+                try:
+                    db.execute(f"ALTER TABLE users ADD COLUMN {column} TEXT")
+                except Exception:
+                    pass
 
         db.commit()
 

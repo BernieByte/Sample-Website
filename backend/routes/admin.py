@@ -29,12 +29,22 @@ def list_users():
         return jsonify({"error": "Admin access required."}), 403
 
     users = db.execute(
-        "SELECT id, username, email, signup_ip, created_at FROM users ORDER BY created_at DESC"
+        """
+        SELECT id, username, email, signup_ip, signup_town, signup_country,
+               signup_state, created_at
+        FROM users ORDER BY created_at DESC
+        """
     ).fetchall()
     user_data = []
     for user in users:
         item = dict(user)
-        item.update(lookup_ip(item.get("signup_ip")))
+        item.update({
+            "town": item.pop("signup_town") or "Unavailable",
+            "country": item.pop("signup_country") or "Unavailable",
+            "state": item.pop("signup_state") or "Unavailable",
+        })
+        if item["town"] == "Unavailable" or item["country"] == "Unavailable":
+            item.update(lookup_ip(item.get("signup_ip")))
         user_data.append(item)
     return jsonify({"users": user_data}), 200
 
@@ -53,8 +63,9 @@ def list_logins():
 
     logins = db.execute(
         """
-         SELECT login_events.id, users.username, users.email,
-             login_events.ip_address, login_events.logged_in_at
+           SELECT login_events.id, users.username, users.email,
+               login_events.ip_address, login_events.town,
+               login_events.country, login_events.state, login_events.logged_in_at
         FROM login_events
         JOIN users ON users.id = login_events.user_id
         ORDER BY login_events.logged_in_at DESC, login_events.id DESC
@@ -64,6 +75,7 @@ def list_logins():
     login_data = []
     for login in logins:
         item = dict(login)
-        item.update(lookup_ip(item.get("ip_address")))
+        if item.get("town") == "Unavailable" or item.get("country") == "Unavailable":
+            item.update(lookup_ip(item.get("ip_address")))
         login_data.append(item)
     return jsonify({"logins": login_data}), 200

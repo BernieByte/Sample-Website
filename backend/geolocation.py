@@ -1,17 +1,17 @@
 import json
 import socket
-from urllib.parse import quote
+from urllib.parse import quote, urlencode
 from urllib.request import Request, urlopen
 
 
 def lookup_ip(ip_address):
     if not ip_address or ip_address in {"Unknown", "Unavailable"}:
-        return {"country": "Unavailable", "state": "Unavailable"}
+        return {"town": "Unavailable", "country": "Unavailable", "state": "Unavailable"}
 
     try:
         socket.inet_aton(ip_address)
     except OSError:
-        return {"country": "Unavailable", "state": "Unavailable"}
+        return {"town": "Unavailable", "country": "Unavailable", "state": "Unavailable"}
 
     request = Request(
         f"https://ipwho.is/{quote(ip_address)}",
@@ -21,12 +21,48 @@ def lookup_ip(ip_address):
         with urlopen(request, timeout=3) as response:
             data = json.load(response)
     except Exception:
-        return {"country": "Unavailable", "state": "Unavailable"}
+        return {"town": "Unavailable", "country": "Unavailable", "state": "Unavailable"}
 
     if not data.get("success", False):
-        return {"country": "Unavailable", "state": "Unavailable"}
+        return {"town": "Unavailable", "country": "Unavailable", "state": "Unavailable"}
 
     return {
+        "town": data.get("city") or "Unavailable",
         "country": data.get("country") or "Unavailable",
         "state": data.get("region") or "Unavailable",
     }
+
+
+def lookup_coordinates(latitude, longitude):
+    try:
+        latitude = float(latitude)
+        longitude = float(longitude)
+        if not -90 <= latitude <= 90 or not -180 <= longitude <= 180:
+            raise ValueError
+    except (TypeError, ValueError):
+        return {}
+
+    query = urlencode({"lat": latitude, "lon": longitude, "format": "jsonv2"})
+    request = Request(
+        f"https://nominatim.openstreetmap.org/reverse?{query}",
+        headers={"User-Agent": "ByteNest location lookup contact@example.com"},
+    )
+    try:
+        with urlopen(request, timeout=4) as response:
+            address = json.load(response).get("address", {})
+    except Exception:
+        return {}
+
+    return {
+        "town": address.get("town") or address.get("city") or address.get("village") or "Unavailable",
+        "country": address.get("country") or "Unavailable",
+        "state": address.get("state") or "Unavailable",
+    }
+
+
+def resolve_location(location, ip_address):
+    if isinstance(location, dict):
+        precise_location = lookup_coordinates(location.get("latitude"), location.get("longitude"))
+        if precise_location:
+            return precise_location
+    return lookup_ip(ip_address)

@@ -9,6 +9,21 @@ document.addEventListener('DOMContentLoaded', () => {
     node.style.color = isError ? '#e24c5b' : '#2d6df6';
   };
 
+  const getBrowserLocation = () => new Promise((resolve) => {
+    if (!navigator.geolocation) {
+      resolve(null);
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (position) => resolve({
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+      }),
+      () => resolve(null),
+      { enableHighAccuracy: true, timeout: 5000, maximumAge: 300000 }
+    );
+  });
+
   if (signupForm) {
     signupForm.addEventListener('submit', async (event) => {
       event.preventDefault();
@@ -23,10 +38,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
       try {
         setMessage('signupMessage', 'Creating account...');
+        const location = await getBrowserLocation();
         const response = await fetch('/api/signup', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username, email, password })
+          body: JSON.stringify({ username, email, password, location })
         });
 
         const data = await response.json();
@@ -55,10 +71,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
       try {
         setMessage('loginMessage', 'Logging in...');
+        const location = await getBrowserLocation();
         const response = await fetch('/api/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username_or_email: loginField, password })
+          body: JSON.stringify({ username_or_email: loginField, password, location })
         });
 
         const data = await response.json();

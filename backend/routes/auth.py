@@ -6,6 +6,7 @@ from flask import Blueprint, jsonify, request, session
 
 from backend.config import Config
 from backend.db import get_db
+from backend.geolocation import resolve_location
 from backend.mail import send_password_reset_email
 from backend.utils import hash_password, verify_password
 
@@ -38,9 +39,22 @@ def signup():
 
     forwarded_for = request.headers.get("X-Forwarded-For", "")
     signup_ip = (forwarded_for.split(",")[0] or request.remote_addr or "Unknown").strip()
+    location = resolve_location(data.get("location"), signup_ip)
     db.execute(
-        "INSERT INTO users (username, email, password_hash, signup_ip) VALUES (?, ?, ?, ?)",
-        (username, email, hash_password(password), signup_ip),
+        """
+        INSERT INTO users
+            (username, email, password_hash, signup_ip, signup_town, signup_country, signup_state)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            username,
+            email,
+            hash_password(password),
+            signup_ip,
+            location.get("town", "Unavailable"),
+            location.get("country", "Unavailable"),
+            location.get("state", "Unavailable"),
+        ),
     )
     db.commit()
 
@@ -81,9 +95,19 @@ def login():
 
     forwarded_for = request.headers.get("X-Forwarded-For", "")
     ip_address = (forwarded_for.split(",")[0] or request.remote_addr or "Unknown").strip()
+    location = resolve_location(data.get("location"), ip_address)
     db.execute(
-        "INSERT INTO login_events (user_id, ip_address) VALUES (?, ?)",
-        (user["id"], ip_address),
+        """
+        INSERT INTO login_events (user_id, ip_address, town, country, state)
+        VALUES (?, ?, ?, ?, ?)
+        """,
+        (
+            user["id"],
+            ip_address,
+            location.get("town", "Unavailable"),
+            location.get("country", "Unavailable"),
+            location.get("state", "Unavailable"),
+        ),
     )
     db.commit()
     session["user_id"] = user["id"]
