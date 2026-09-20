@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const renderLogins = (logins) => {
     loginTableBody.innerHTML = '';
     if (!logins.length) {
-      loginTableBody.innerHTML = '<tr><td colspan="4" class="empty-cell">No logins recorded yet.</td></tr>';
+      loginTableBody.innerHTML = '<tr><td colspan="6" class="empty-cell">No logins recorded yet.</td></tr>';
       return;
     }
 
@@ -19,6 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
         <td class="user-name">${login.username}</td>
         <td>${login.email}</td>
         <td>${login.ip_address || 'Unavailable'}</td>
+        <td>${login.country || 'Unavailable'}</td>
+        <td>${login.state || 'Unavailable'}</td>
         <td>${new Date(login.logged_in_at).toLocaleString()}</td>
       `;
       loginTableBody.appendChild(row);
@@ -51,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
     tableBody.innerHTML = '';
 
     if (!visibleUsers.length) {
-      tableBody.innerHTML = '<tr><td colspan="5" class="empty-cell">No matching users.</td></tr>';
+      tableBody.innerHTML = '<tr><td colspan="7" class="empty-cell">No matching users.</td></tr>';
       return;
     }
 
@@ -62,6 +64,8 @@ document.addEventListener('DOMContentLoaded', () => {
         <td class="user-name">${user.username}</td>
         <td>${user.email}</td>
         <td>${user.signup_ip || 'Unavailable'}</td>
+        <td>${user.country || 'Unavailable'}</td>
+        <td>${user.state || 'Unavailable'}</td>
         <td>${new Date(user.created_at).toLocaleString()}</td>
       `;
       tableBody.appendChild(row);

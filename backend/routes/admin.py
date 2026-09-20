@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, session
 
 from backend.config import Config
 from backend.db import get_db
+from backend.geolocation import lookup_ip
 
 
 admin_bp = Blueprint("admin", __name__, url_prefix="/api/admin")
@@ -30,7 +31,12 @@ def list_users():
     users = db.execute(
         "SELECT id, username, email, signup_ip, created_at FROM users ORDER BY created_at DESC"
     ).fetchall()
-    return jsonify({"users": [dict(user) for user in users]}), 200
+    user_data = []
+    for user in users:
+        item = dict(user)
+        item.update(lookup_ip(item.get("signup_ip")))
+        user_data.append(item)
+    return jsonify({"users": user_data}), 200
 
 
 @admin_bp.route("/logins", methods=["GET"])
@@ -55,4 +61,9 @@ def list_logins():
         LIMIT 100
         """
     ).fetchall()
-    return jsonify({"logins": [dict(login) for login in logins]}), 200
+    login_data = []
+    for login in logins:
+        item = dict(login)
+        item.update(lookup_ip(item.get("ip_address")))
+        login_data.append(item)
+    return jsonify({"logins": login_data}), 200
