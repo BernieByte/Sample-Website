@@ -43,8 +43,9 @@ def signup():
     db.execute(
         """
         INSERT INTO users
-            (username, email, password_hash, signup_ip, signup_town, signup_country, signup_state)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+            (username, email, password_hash, signup_ip, signup_town, signup_country,
+             signup_state, signup_location_source)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         """,
         (
             username,
@@ -54,6 +55,7 @@ def signup():
             location.get("town", "Unavailable"),
             location.get("country", "Unavailable"),
             location.get("state", "Unavailable"),
+            location.get("source", "Unavailable"),
         ),
     )
     db.commit()
@@ -98,8 +100,8 @@ def login():
     location = resolve_location(data.get("location"), ip_address)
     db.execute(
         """
-        INSERT INTO login_events (user_id, ip_address, town, country, state)
-        VALUES (?, ?, ?, ?, ?)
+        INSERT INTO login_events (user_id, ip_address, town, country, state, source)
+        VALUES (?, ?, ?, ?, ?, ?)
         """,
         (
             user["id"],
@@ -107,6 +109,7 @@ def login():
             location.get("town", "Unavailable"),
             location.get("country", "Unavailable"),
             location.get("state", "Unavailable"),
+            location.get("source", "Unavailable"),
         ),
     )
     db.commit()

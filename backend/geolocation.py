@@ -6,12 +6,12 @@ from urllib.request import Request, urlopen
 
 def lookup_ip(ip_address):
     if not ip_address or ip_address in {"Unknown", "Unavailable"}:
-        return {"town": "Unavailable", "country": "Unavailable", "state": "Unavailable"}
+        return {"town": "Unavailable", "country": "Unavailable", "state": "Unavailable", "source": "Unavailable"}
 
     try:
         socket.inet_aton(ip_address)
     except OSError:
-        return {"town": "Unavailable", "country": "Unavailable", "state": "Unavailable"}
+        return {"town": "Unavailable", "country": "Unavailable", "state": "Unavailable", "source": "Unavailable"}
 
     request = Request(
         f"https://ipwho.is/{quote(ip_address)}",
@@ -21,15 +21,16 @@ def lookup_ip(ip_address):
         with urlopen(request, timeout=3) as response:
             data = json.load(response)
     except Exception:
-        return {"town": "Unavailable", "country": "Unavailable", "state": "Unavailable"}
+        return {"town": "Unavailable", "country": "Unavailable", "state": "Unavailable", "source": "IP estimate"}
 
     if not data.get("success", False):
-        return {"town": "Unavailable", "country": "Unavailable", "state": "Unavailable"}
+        return {"town": "Unavailable", "country": "Unavailable", "state": "Unavailable", "source": "IP estimate"}
 
     return {
         "town": data.get("city") or "Unavailable",
         "country": data.get("country") or "Unavailable",
         "state": data.get("region") or "Unavailable",
+        "source": "IP estimate",
     }
 
 
@@ -57,12 +58,27 @@ def lookup_coordinates(latitude, longitude):
         "town": address.get("town") or address.get("city") or address.get("village") or "Unavailable",
         "country": address.get("country") or "Unavailable",
         "state": address.get("state") or "Unavailable",
+        "source": "Browser location",
     }
 
 
 def resolve_location(location, ip_address):
     if isinstance(location, dict):
-        precise_location = lookup_coordinates(location.get("latitude"), location.get("longitude"))
-        if precise_location:
-            return precise_location
-    return lookup_ip(ip_address)
+        try:
+            latitude = float(location.get("latitude"))
+            longitude = float(location.get("longitude"))
+            if -90 <= latitude <= 90 and -180 <= longitude <= 180:
+                precise_location = lookup_coordinates(latitude, longitude)
+                if precise_location:
+                    return precise_location
+                return {
+                    "town": "Unavailable",
+                    "country": "Unavailable",
+                    "state": "Unavailable",
+                    "source": "Browser coordinates",
+                }
+        except (TypeError, ValueError):
+            pass
+    fallback = lookup_ip(ip_address)
+    fallback["source"] = "IP estimate" if fallback["source"] != "Unavailable" else "Unavailable"
+    return fallback
