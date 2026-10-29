@@ -1078,7 +1078,7 @@ h1 {
   grid-template-rows: 58px auto auto minmax(0, 1fr) 34px;
   min-width: 0;
   min-height: 0;
-  background: #f4f5f7;
+  background: #f0f1f4;
 }
 
 .writer-topbar {
@@ -1336,7 +1336,7 @@ h1 {
 }
 
 .toolbar-style-select { width: 115px; }
-.toolbar-font-select { width: 118px; }
+.toolbar-font-select { width: 145px; }
 .toolbar-size-select { width: 55px; }
 .toolbar-spacing-select { width: 73px; }
 
@@ -1371,28 +1371,45 @@ h1 {
 
 .writer-canvas-scroll {
   min-height: 0;
-  padding: 10px 28px 28px;
+  padding: 15px 28px 34px;
   overflow: auto;
+  background: radial-gradient(ellipse at 50% 0%, #f6f7f9 0%, #eff0f3 74%);
   scrollbar-color: #c9cdd6 transparent;
 }
 
 .document-page {
-  width: min(100%, 850px);
-  min-height: 900px;
+  position: relative;
+  width: min(100%, 870px);
+  min-height: 1020px;
   margin: 0 auto;
-  padding: 79px 92px 92px;
-  border: 1px solid #e7e8eb;
+  padding: 82px 100px 98px;
+  border: 1px solid #e4e5e9;
+  border-top: 3px solid #747de8;
   background: #fff;
-  box-shadow: 0 2px 8px rgba(38, 45, 59, 0.055);
+  box-shadow: 0 2px 7px rgba(38, 45, 59, 0.045), 0 18px 48px rgba(38, 45, 59, 0.07);
+}
+
+.document-page-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 0 39px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eff0f2;
+  color: #a0a5af;
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
 }
 
 .document-editor {
   min-height: 720px;
   outline: none;
-  color: #252a34;
-  font-family: Arial, sans-serif;
+  color: #293040;
+  font-family: Aptos, Calibri, "Segoe UI", sans-serif;
   font-size: 12pt;
-  line-height: 1.72;
+  line-height: 1.78;
+  letter-spacing: 0.003em;
   overflow-wrap: anywhere;
 }
 
@@ -1406,7 +1423,7 @@ h1 {
   border-radius: 0;
   background: transparent;
   font-size: 12pt;
-  line-height: 1.72;
+  line-height: 1.78;
 }
 
 .document-editor:empty::before {
@@ -1527,6 +1544,7 @@ h1 {
   .format-toolbar { margin: 0 10px 10px; border-radius: 7px; }
   .writer-canvas-scroll { padding: 5px 8px 18px; }
   .document-page { width: 100%; min-height: 720px; padding: 42px 28px; }
+  .document-page-meta { margin-bottom: 27px; font-size: 0.48rem; }
   #editor.document-editor { min-height: 610px; }
   .writer-statusbar { min-height: 31px; padding: 0 12px; }
 }
@@ -1537,6 +1555,7 @@ h1 {
   .writer-sidebar, .writer-topbar, .writer-document-heading, .format-toolbar, .writer-statusbar, .toast-region { display: none !important; }
   .writer-app, .writer-main, .writer-canvas-scroll { display: block; height: auto; min-height: 0; padding: 0; overflow: visible; background: white; }
   .document-page { width: auto; min-height: 0; margin: 0; padding: 0; border: 0; box-shadow: none; }
+  .document-page-meta { display: none; }
   .document-editor { min-height: 0; }
   #editor.document-editor { min-height: 0; }
 }
@@ -1724,6 +1743,9 @@ h1 {
   color: #8b919d;
   font-size: 0.72rem;
 }
+
+.marketing-note + .marketing-note { margin-top: 10px; }
+.autosave-check { font-size: 0.9rem; }
 
 .marketing-check {
   display: grid;

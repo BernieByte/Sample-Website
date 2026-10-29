@@ -26,7 +26,11 @@ FONT_SIZES = {"1": "8pt", "2": "10pt", "3": "12pt", "4": "14pt", "5": "18pt", "6
 
 def _safe_document_style(style):
     safe = []
-    allowed_names = {"arial", "calibri", "cambria", "georgia", "times new roman", "verdana", "courier new", "monospace", "serif", "sans-serif"}
+    allowed_names = {
+        "aptos", "arial", "calibri", "cambria", "candara", "consolas", "courier new",
+        "garamond", "georgia", "lucida console", "palatino linotype", "segoe ui", "tahoma",
+        "times new roman", "trebuchet ms", "verdana", "monospace", "serif", "sans-serif",
+    }
     colors = {"black", "white", "red", "blue", "green", "yellow", "orange", "purple", "pink", "gray", "grey", "teal", "navy", "maroon"}
 
     for declaration in (style or "").split(";"):
@@ -113,7 +117,11 @@ class _DocumentHTMLSanitizer(HTMLParser):
                 styles.append(f"color:{value}")
             elif tag == "font" and name == "face":
                 family = value.strip().strip("'\"")
-                if family.lower() in {"arial", "calibri", "cambria", "georgia", "times new roman", "verdana", "courier new"}:
+                if family.lower() in {
+                    "aptos", "arial", "calibri", "cambria", "candara", "consolas", "courier new",
+                    "garamond", "georgia", "lucida console", "palatino linotype", "segoe ui", "tahoma",
+                    "times new roman", "trebuchet ms", "verdana",
+                }:
                     styles.append(f"font-family:{family}")
             elif tag == "font" and name == "size" and value in FONT_SIZES:
                 styles.append(f"font-size:{FONT_SIZES[value]}")

@@ -90,11 +90,28 @@
           </select>
           <label class="visually-hidden" for="fontFamily">Font</label>
           <select id="fontFamily" class="toolbar-select toolbar-font-select" aria-label="Font">
-            <option value="Arial">Arial</option>
-            <option value="Georgia">Georgia</option>
-            <option value="'Times New Roman'">Times New Roman</option>
-            <option value="Verdana">Verdana</option>
-            <option value="'Courier New'">Courier New</option>
+            <optgroup label="Sans serif">
+              <option value="Aptos" selected>Aptos</option>
+              <option value="Arial">Arial</option>
+              <option value="Calibri">Calibri</option>
+              <option value="Candara">Candara</option>
+              <option value="'Segoe UI'">Segoe UI</option>
+              <option value="Tahoma">Tahoma</option>
+              <option value="'Trebuchet MS'">Trebuchet MS</option>
+              <option value="Verdana">Verdana</option>
+            </optgroup>
+            <optgroup label="Serif">
+              <option value="Cambria">Cambria</option>
+              <option value="Garamond">Garamond</option>
+              <option value="Georgia">Georgia</option>
+              <option value="'Palatino Linotype'">Palatino Linotype</option>
+              <option value="'Times New Roman'">Times New Roman</option>
+            </optgroup>
+            <optgroup label="Monospace">
+              <option value="Consolas">Consolas</option>
+              <option value="'Courier New'">Courier New</option>
+              <option value="'Lucida Console'">Lucida Console</option>
+            </optgroup>
           </select>
           <label class="visually-hidden" for="fontSize">Font size</label>
           <select id="fontSize" class="toolbar-select toolbar-size-select" aria-label="Font size">
@@ -139,6 +156,7 @@
 
       <div class="writer-canvas-scroll">
         <article class="document-page" aria-label="Document page">
+          <div class="document-page-meta" aria-hidden="true"><span>BYTENEST DOCUMENT</span><span>EDITING</span></div>
           <div id="editor" class="document-editor" contenteditable="true" role="textbox" aria-label="Document content" aria-multiline="true" data-placeholder="Start writing your document…" spellcheck="true"></div>
         </article>
       </div>
