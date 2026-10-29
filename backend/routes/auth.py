@@ -2,7 +2,7 @@ import hashlib
 import secrets
 from datetime import datetime, timedelta, timezone
 
-from flask import Blueprint, jsonify, request, session
+from flask import Blueprint, current_app, jsonify, request, session
 
 from backend.config import Config
 from backend.db import get_db
@@ -164,7 +164,14 @@ def request_password_reset():
     user = db.execute("SELECT id, email FROM users WHERE email = ?", (email,)).fetchone()
     if not user:
         return jsonify({"message": "If an account exists, a reset link will be sent shortly."}), 200
-    if not all((Config.SMTP_HOST, Config.SMTP_USERNAME, Config.SMTP_PASSWORD, Config.SMTP_FROM)):
+    has_brevo_api = current_app.config.get("BREVO_API_KEY") and current_app.config.get("EMAIL_FROM")
+    has_smtp = all((
+        current_app.config.get("SMTP_HOST"),
+        current_app.config.get("SMTP_USERNAME"),
+        current_app.config.get("SMTP_PASSWORD"),
+        current_app.config.get("SMTP_FROM"),
+    ))
+    if not (has_brevo_api or has_smtp):
         return jsonify({"error": "Password reset email is not configured yet."}), 503
 
     raw_token = secrets.token_urlsafe(32)

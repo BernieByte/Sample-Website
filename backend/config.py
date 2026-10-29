@@ -15,5 +15,7 @@ class Config:
     SMTP_USERNAME = os.environ.get("SMTP_USERNAME", "")
     SMTP_PASSWORD = os.environ.get("SMTP_PASSWORD", "")
     SMTP_FROM = os.environ.get("SMTP_FROM", SMTP_USERNAME)
+    BREVO_API_KEY = os.environ.get("BREVO_API_KEY", "")
+    EMAIL_FROM = os.environ.get("EMAIL_FROM", SMTP_FROM)
     DATABASE_PATH = DB_PATH
     JSON_SORT_KEYS = False

@@ -1,9 +1,6 @@
 import os
 import sqlite3
-from flask import g
-
-from .config import Config
-
+from flask import current_app, g
 
 class Database:
     def __init__(self, connection, postgres=False):
@@ -24,17 +21,18 @@ class Database:
 
 def get_db():
     if "db" not in g:
-        if Config.DATABASE_URL:
+        database_url = current_app.config.get("DATABASE_URL")
+        if database_url:
             import psycopg
             from psycopg.rows import dict_row
 
-            database_url = Config.DATABASE_URL.replace("postgres://", "postgresql://", 1)
+            database_url = database_url.replace("postgres://", "postgresql://", 1)
             g.db = Database(
                 psycopg.connect(database_url, row_factory=dict_row),
                 postgres=True,
             )
         else:
-            conn = sqlite3.connect(Config.DATABASE_PATH)
+            conn = sqlite3.connect(current_app.config["DATABASE_PATH"])
             conn.row_factory = sqlite3.Row
             g.db = Database(conn)
     return g.db
@@ -47,8 +45,8 @@ def close_db(_error=None):
 
 
 def init_db(app):
-    if not Config.DATABASE_URL:
-        os.makedirs(os.path.dirname(Config.DATABASE_PATH), exist_ok=True)
+    if not app.config.get("DATABASE_URL"):
+        os.makedirs(os.path.dirname(app.config["DATABASE_PATH"]), exist_ok=True)
 
     with app.app_context():
         db = get_db()

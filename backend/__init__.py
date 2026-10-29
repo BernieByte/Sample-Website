@@ -10,7 +10,7 @@ from .routes.files import files_bp
 from .routes.views import views_bp
 
 
-def create_app():
+def create_app(config_overrides=None):
     project_root = Path(__file__).resolve().parent.parent
     app = Flask(
         __name__,
@@ -18,6 +18,8 @@ def create_app():
         static_folder=str(project_root / "static"),
     )
     app.config.from_object(Config)
+    if config_overrides:
+        app.config.update(config_overrides)
 
     init_db(app)
 
