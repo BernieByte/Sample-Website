@@ -1,6 +1,6 @@
 # ByteNest
 
-ByteNest is a Flask app for student notes. It supports account signup and login, private files, password changes, password reset by email, and an optional admin view.
+ByteNest is a Flask app for student documents. It supports account signup and login, private files, password changes, password reset by email, and an optional admin view. The writing workspace includes rich text formatting, autosave, document search, copy, print, and HTML export.
 
 ## Run locally
 

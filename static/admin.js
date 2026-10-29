@@ -6,6 +6,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const message = document.getElementById('adminMessage');
   let users = [];
 
+  const addCell = (row, value, className = '') => {
+    const cell = document.createElement('td');
+    if (className) cell.className = className;
+    cell.textContent = value == null || value === '' ? 'Unavailable' : String(value);
+    row.appendChild(cell);
+  };
+
   const renderLogins = (logins) => {
     loginTableBody.innerHTML = '';
     if (!logins.length) {
@@ -15,16 +22,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     logins.forEach((login) => {
       const row = document.createElement('tr');
-      row.innerHTML = `
-        <td class="user-name">${login.username}</td>
-        <td>${login.email}</td>
-        <td>${login.ip_address || 'Unavailable'}</td>
-        <td>${login.town || 'Unavailable'}</td>
-        <td>${login.country || 'Unavailable'}</td>
-        <td>${login.state || 'Unavailable'}</td>
-        <td>${login.source || 'Unavailable'}</td>
-        <td>${new Date(login.logged_in_at).toLocaleString()}</td>
-      `;
+      addCell(row, login.username, 'user-name');
+      addCell(row, login.email);
+      addCell(row, login.ip_address);
+      addCell(row, login.town);
+      addCell(row, login.country);
+      addCell(row, login.state);
+      addCell(row, login.source);
+      addCell(row, new Date(login.logged_in_at).toLocaleString());
       loginTableBody.appendChild(row);
     });
   };
@@ -61,17 +66,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     visibleUsers.forEach((user) => {
       const row = document.createElement('tr');
-      row.innerHTML = `
-        <td>${user.id}</td>
-        <td class="user-name">${user.username}</td>
-        <td>${user.email}</td>
-        <td>${user.signup_ip || 'Unavailable'}</td>
-        <td>${user.town || 'Unavailable'}</td>
-        <td>${user.country || 'Unavailable'}</td>
-        <td>${user.state || 'Unavailable'}</td>
-        <td>${user.source || 'Unavailable'}</td>
-        <td>${new Date(user.created_at).toLocaleString()}</td>
-      `;
+      addCell(row, user.id);
+      addCell(row, user.username, 'user-name');
+      addCell(row, user.email);
+      addCell(row, user.signup_ip);
+      addCell(row, user.town);
+      addCell(row, user.country);
+      addCell(row, user.state);
+      addCell(row, user.source);
+      addCell(row, new Date(user.created_at).toLocaleString());
       tableBody.appendChild(row);
     });
   };

@@ -3,62 +3,143 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ByteNest | Dashboard</title>
+  <meta name="theme-color" content="#f5f6f8" />
+  <title>Documents | ByteNest</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
-<body>
-  <div class="dashboard-page">
-    <aside class="sidebar">
-      <div class="sidebar-header">
-        <div class="brand-inline">
-          <span class="brand-dot"></span>
-          <span>ByteNest</span>
-        </div>
-      </div>
+<body class="writer-body">
+  <div class="writer-app">
+    <aside class="writer-sidebar" aria-label="Documents">
+      <a class="writer-brand" href="/" aria-label="ByteNest home">
+        <span class="writer-brand-mark">b</span>
+        <span>ByteNest</span>
+      </a>
 
-      <button id="newFileBtn" class="sidebar-button primary">+ New file</button>
-      <button id="logoutBtn" class="sidebar-button secondary">Log out</button>
+      <button id="newFileBtn" class="writer-new-button" type="button"><span aria-hidden="true">＋</span> New document</button>
 
-      <label class="sidebar-filter">
-        <span>Search files</span>
-        <input id="fileSearch" type="search" placeholder="Search files">
+      <label class="writer-search">
+        <span class="visually-hidden">Search documents</span>
+        <span aria-hidden="true">⌕</span>
+        <input id="fileSearch" type="search" placeholder="Search documents" autocomplete="off">
+        <kbd>⌘ K</kbd>
       </label>
 
-      <div class="user-box">
-        <small>Signed in as</small>
-        <strong id="dashboardUser">User</strong>
+      <div class="writer-section-label">
+        <span>Recent documents</span>
+        <span id="documentCount" class="writer-count">0</span>
       </div>
+      <div id="fileList" class="writer-file-list" role="list" aria-label="Your documents"></div>
 
-      <form id="changePasswordForm" class="password-form">
-        <h3>Change password</h3>
-        <input id="currentPassword" type="password" placeholder="Current password" required>
-        <input id="newPassword" type="password" placeholder="New password (8+ characters)" minlength="8" required>
-        <button type="submit" class="sidebar-button secondary">Update password</button>
-        <p id="passwordMessage" class="password-message" role="status"></p>
-      </form>
+      <div class="writer-sidebar-footer">
+        <div class="writer-user-avatar" id="userAvatar" aria-hidden="true">U</div>
+        <div class="writer-user-copy"><small>Signed in as</small><strong id="dashboardUser">User</strong></div>
+        <button id="logoutBtn" class="writer-icon-button logout-button" type="button" title="Log out" aria-label="Log out">↗</button>
+      </div>
+      <details class="writer-account-details">
+        <summary>Account settings</summary>
+        <form id="changePasswordForm" class="password-form">
+          <label for="currentPassword">Current password</label>
+          <input id="currentPassword" type="password" autocomplete="current-password" required>
+          <label for="newPassword">New password</label>
+          <input id="newPassword" type="password" autocomplete="new-password" minlength="8" placeholder="At least 8 characters" required>
+          <button type="submit" class="writer-small-button">Update password</button>
+          <p id="passwordMessage" class="password-message" role="status"></p>
+        </form>
+      </details>
     </aside>
 
-    <main class="workspace">
-      <header class="workspace-topbar">
-        <h2>Your files</h2>
+    <main class="writer-main">
+      <header class="writer-topbar">
+        <div class="writer-breadcrumb"><span class="breadcrumb-home">⌂</span><span>/</span><span>My workspace</span><span>/</span><strong id="breadcrumbTitle">Untitled document</strong></div>
+        <div class="writer-top-actions">
+          <span id="saveStatus" class="writer-save-status" aria-live="polite"><i></i> All changes saved</span>
+          <button id="saveFileBtn" class="writer-button writer-button-light" type="button" title="Save (Ctrl+S)">Save</button>
+          <button id="exportFileBtn" class="writer-button writer-button-light" type="button">Export</button>
+          <button id="printFileBtn" class="writer-button writer-button-dark" type="button">Print</button>
+          <div class="writer-more-menu">
+            <button id="moreMenuBtn" class="writer-button writer-button-light writer-more-trigger" type="button" aria-label="More document actions" aria-expanded="false">•••</button>
+            <div id="moreMenu" class="writer-menu" hidden>
+              <button id="duplicateFileBtn" type="button">Make a copy</button>
+              <button id="deleteFileBtn" class="menu-danger" type="button">Move to trash</button>
+            </div>
+          </div>
+        </div>
       </header>
 
-      <div id="fileList" class="file-list"></div>
-    </main>
-
-    <section class="editor-panel">
-      <div class="editor-toolbar">
-        <input id="fileTitle" type="text" placeholder="Untitled document" />
-        <button id="saveFileBtn" class="editor-button">Save</button>
-        <button id="duplicateFileBtn" class="editor-button secondary">Duplicate</button>
-        <button id="deleteFileBtn" class="editor-button danger">Delete</button>
+      <div class="writer-document-heading">
+        <div class="document-type-label"><span></span> DOCUMENT</div>
+        <input id="fileTitle" class="writer-title-input" type="text" placeholder="Untitled document" aria-label="Document title" maxlength="180">
+        <p class="writer-document-hint">A quiet space for your next idea.</p>
       </div>
 
-      <textarea id="editor" placeholder="Start writing..."></textarea>
-      <p id="saveStatus" class="save-status" aria-live="polite"></p>
-    </section>
-  </div>
+      <section class="format-toolbar" aria-label="Text formatting">
+        <div class="toolbar-group">
+          <button class="format-button" type="button" data-command="undo" title="Undo (Ctrl+Z)" aria-label="Undo">↶</button>
+          <button class="format-button" type="button" data-command="redo" title="Redo (Ctrl+Y)" aria-label="Redo">↷</button>
+        </div>
+        <span class="toolbar-divider"></span>
+        <div class="toolbar-group toolbar-select-group">
+          <label class="visually-hidden" for="blockStyle">Paragraph style</label>
+          <select id="blockStyle" class="toolbar-select toolbar-style-select" aria-label="Paragraph style">
+            <option value="P">Normal text</option>
+            <option value="H1">Title</option>
+            <option value="H2">Heading 1</option>
+            <option value="H3">Heading 2</option>
+            <option value="BLOCKQUOTE">Quote</option>
+            <option value="PRE">Code block</option>
+          </select>
+          <label class="visually-hidden" for="fontFamily">Font</label>
+          <select id="fontFamily" class="toolbar-select toolbar-font-select" aria-label="Font">
+            <option value="Arial">Arial</option>
+            <option value="Georgia">Georgia</option>
+            <option value="'Times New Roman'">Times New Roman</option>
+            <option value="Verdana">Verdana</option>
+            <option value="'Courier New'">Courier New</option>
+          </select>
+          <label class="visually-hidden" for="fontSize">Font size</label>
+          <select id="fontSize" class="toolbar-select toolbar-size-select" aria-label="Font size">
+            <option value="2">10</option><option value="3" selected>12</option><option value="4">14</option>
+            <option value="5">18</option><option value="6">24</option><option value="7">36</option>
+          </select>
+        </div>
+        <span class="toolbar-divider"></span>
+        <div class="toolbar-group">
+          <button class="format-button format-strong" type="button" data-command="bold" title="Bold (Ctrl+B)" aria-label="Bold">B</button>
+          <button class="format-button format-italic" type="button" data-command="italic" title="Italic (Ctrl+I)" aria-label="Italic">I</button>
+          <button class="format-button format-underline" type="button" data-command="underline" title="Underline (Ctrl+U)" aria-label="Underline">U</button>
+          <button class="format-button format-strike" type="button" data-command="strikeThrough" title="Strikethrough" aria-label="Strikethrough">S</button>
+          <label class="color-control" title="Text color" aria-label="Text color"><span>A</span><input id="textColor" type="color" value="#273244" aria-label="Text color"></label>
+          <label class="color-control highlight-control" title="Highlight color" aria-label="Highlight color"><span>▰</span><input id="highlightColor" type="color" value="#fff1a8" aria-label="Highlight color"></label>
+        </div>
+        <span class="toolbar-divider"></span>
+        <div class="toolbar-group">
+          <button class="format-button" type="button" data-command="insertUnorderedList" title="Bulleted list" aria-label="Bulleted list">☷</button>
+          <button class="format-button" type="button" data-command="insertOrderedList" title="Numbered list" aria-label="Numbered list">≡</button>
+          <button class="format-button" type="button" data-command="justifyLeft" title="Align left" aria-label="Align left">☰</button>
+          <button class="format-button" type="button" data-command="justifyCenter" title="Align center" aria-label="Align center">☷</button>
+          <button class="format-button" type="button" data-command="justifyRight" title="Align right" aria-label="Align right">☰</button>
+        </div>
+        <span class="toolbar-divider"></span>
+        <div class="toolbar-group">
+          <button id="insertLinkBtn" class="format-button" type="button" title="Insert link" aria-label="Insert link">↗</button>
+          <button id="insertTableBtn" class="format-button" type="button" title="Insert table" aria-label="Insert table">▦</button>
+          <button class="format-button" type="button" data-command="removeFormat" title="Clear formatting" aria-label="Clear formatting">Tx</button>
+        </div>
+      </section>
 
+      <div class="writer-canvas-scroll">
+        <article class="document-page" aria-label="Document page">
+          <div id="editor" class="document-editor" contenteditable="true" role="textbox" aria-label="Document content" aria-multiline="true" data-placeholder="Start writing your document…" spellcheck="true"></div>
+        </article>
+      </div>
+
+      <footer class="writer-statusbar">
+        <span id="wordCount">0 words</span><span class="status-dot">·</span><span id="charCount">0 characters</span>
+        <span class="statusbar-spacer"></span><span class="status-page-indicator">A4 <span>▾</span></span><span class="status-dot">·</span><span>English (UK)</span>
+      </footer>
+    </main>
+  </div>
+  <div id="toastRegion" class="toast-region" aria-live="polite" aria-atomic="true"></div>
   <script src="{{ url_for('static', filename='dashboard.js') }}"></script>
 </body>
 </html>
