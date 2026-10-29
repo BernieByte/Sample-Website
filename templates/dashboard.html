@@ -101,6 +101,10 @@
             <option value="2">10</option><option value="3" selected>12</option><option value="4">14</option>
             <option value="5">18</option><option value="6">24</option><option value="7">36</option>
           </select>
+          <label class="visually-hidden" for="lineSpacing">Line spacing</label>
+          <select id="lineSpacing" class="toolbar-select toolbar-spacing-select" aria-label="Line spacing">
+            <option value="1">Single</option><option value="1.15" selected>1.15</option><option value="1.5">1.5</option><option value="2">Double</option>
+          </select>
         </div>
         <span class="toolbar-divider"></span>
         <div class="toolbar-group">
@@ -108,6 +112,8 @@
           <button class="format-button format-italic" type="button" data-command="italic" title="Italic (Ctrl+I)" aria-label="Italic">I</button>
           <button class="format-button format-underline" type="button" data-command="underline" title="Underline (Ctrl+U)" aria-label="Underline">U</button>
           <button class="format-button format-strike" type="button" data-command="strikeThrough" title="Strikethrough" aria-label="Strikethrough">S</button>
+          <button class="format-button" type="button" data-command="subscript" title="Subscript" aria-label="Subscript">x₂</button>
+          <button class="format-button" type="button" data-command="superscript" title="Superscript" aria-label="Superscript">x²</button>
           <label class="color-control" title="Text color" aria-label="Text color"><span>A</span><input id="textColor" type="color" value="#273244" aria-label="Text color"></label>
           <label class="color-control highlight-control" title="Highlight color" aria-label="Highlight color"><span>▰</span><input id="highlightColor" type="color" value="#fff1a8" aria-label="Highlight color"></label>
         </div>
@@ -118,11 +124,15 @@
           <button class="format-button" type="button" data-command="justifyLeft" title="Align left" aria-label="Align left">☰</button>
           <button class="format-button" type="button" data-command="justifyCenter" title="Align center" aria-label="Align center">☷</button>
           <button class="format-button" type="button" data-command="justifyRight" title="Align right" aria-label="Align right">☰</button>
+          <button class="format-button" type="button" data-command="indent" title="Increase indent" aria-label="Increase indent">⇥</button>
+          <button class="format-button" type="button" data-command="outdent" title="Decrease indent" aria-label="Decrease indent">⇤</button>
         </div>
         <span class="toolbar-divider"></span>
         <div class="toolbar-group">
           <button id="insertLinkBtn" class="format-button" type="button" title="Insert link" aria-label="Insert link">↗</button>
           <button id="insertTableBtn" class="format-button" type="button" title="Insert table" aria-label="Insert table">▦</button>
+          <button class="format-button" type="button" data-command="insertHorizontalRule" title="Insert horizontal line" aria-label="Insert horizontal line">―</button>
+          <button id="findTextBtn" class="format-button" type="button" title="Find in document" aria-label="Find in document">⌕</button>
           <button class="format-button" type="button" data-command="removeFormat" title="Clear formatting" aria-label="Clear formatting">Tx</button>
         </div>
       </section>

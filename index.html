@@ -1,75 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ByteNest</title>
-    <meta name="description" content="ByteNest is a digital workspace where students can write, save, and organise their work in one place.">
-    <link rel="icon" type="image/png" href="https://img.freepik.com/premium-photo/futuristic-logo-design-cutting-edge-tech-logo-abstract-shapes-vibrant-bluesilver-scheme_1245763-85975.jpg?w=2000">
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f5f6f8">
+  <title>ByteNest — a calmer place to write</title>
+  <meta name="description" content="Write, organise, and keep your study documents together in ByteNest.">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
-<body>
-    <div class="page-shell">
-        <header class="topbar">
-            <div class="brand">
-                <img class="brand-logo" src="https://img.freepik.com/premium-photo/futuristic-logo-design-cutting-edge-tech-logo-abstract-shapes-vibrant-bluesilver-scheme_1245763-85975.jpg?w=2000" alt="ByteNest logo">
-                <span>ByteNest</span>
+<body class="marketing-body">
+  <div class="marketing-shell">
+    <header class="marketing-nav">
+      <a href="/" class="marketing-brand"><span class="marketing-brand-mark">b</span><span>ByteNest</span></a>
+      <nav aria-label="Main navigation">
+        <a class="marketing-nav-link" href="#features">Features</a>
+        <a class="marketing-nav-link" href="/login">Log in</a>
+        <a class="marketing-nav-cta" href="/signup">Create your workspace <span aria-hidden="true">→</span></a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="marketing-hero">
+        <div class="marketing-hero-copy">
+          <div class="marketing-kicker"><span></span> YOUR SPACE TO THINK CLEARLY</div>
+          <h1>Ideas deserve<br><em>a little room.</em></h1>
+          <p class="marketing-lead">A calm, simple workspace for your notes, essays, and everything you’re working through.</p>
+          <div class="marketing-actions">
+            <a href="/signup" class="marketing-primary-button">Start writing <span aria-hidden="true">→</span></a>
+            <a href="/login" class="marketing-text-link">I already have an account</a>
+          </div>
+          <div class="marketing-note"><span class="marketing-check">✓</span> Your documents stay private to your account.</div>
+        </div>
+
+        <div class="marketing-art" aria-label="Preview of the ByteNest document editor">
+          <div class="marketing-orbit orbit-one"></div><div class="marketing-orbit orbit-two"></div>
+          <div class="preview-window">
+            <div class="preview-titlebar"><div class="preview-dots"><i></i><i></i><i></i></div><span>My workspace</span><small>Saved</small></div>
+            <div class="preview-body">
+              <aside class="preview-files"><div class="preview-mini-brand"><b>b</b> ByteNest</div><div class="preview-mini-new">＋ New document</div><small>RECENT</small><div class="preview-file selected"><span>▤</span><b>Biology notes</b></div><div class="preview-file"><span>▤</span> Essay outline</div><div class="preview-file"><span>▤</span> Reading list</div></aside>
+              <div class="preview-paper"><div class="preview-label">BIOLOGY · 12 WORDS</div><h2>How plants<br>grow toward light</h2><div class="preview-rule"></div><div class="preview-copy-line wide"></div><div class="preview-copy-line"></div><div class="preview-copy-line medium"></div><div class="preview-highlight">Plants respond to light<br>through phototropism.</div><div class="preview-copy-line wide"></div><div class="preview-copy-line short"></div></div>
             </div>
+            <div class="preview-toolbar"><b>B</b><i>I</i><u>U</u><span></span><small>Normal text</small><span></span><small>12 pt</small><span></span><small>≡</small></div>
+          </div>
+          <div class="art-note art-note-top"><span>✳</span> A fresh page, whenever you need one.</div>
+          <div class="art-note art-note-bottom">Made for the work in progress <span>↗</span></div>
+        </div>
+      </section>
 
-            <nav class="nav" aria-label="Main navigation">
-                <a href="/">Home</a>
-                <a href="#">About</a>
-                <a href="/login" class="nav-login">Log In</a>
-                <a href="/signup" class="nav-signup">Sign Up</a>
-            </nav>
-        </header>
+      <section id="features" class="marketing-features">
+        <div class="marketing-section-heading"><span>LESS CLUTTER, MORE CLARITY</span><h2>Everything you need to keep moving.</h2></div>
+        <div class="marketing-feature-grid">
+          <article class="marketing-feature-card"><span class="feature-symbol symbol-lavender">Aa</span><h3>Write your way</h3><p>Shape your thoughts with headings, lists, links, tables, and text styles.</p></article>
+          <article class="marketing-feature-card"><span class="feature-symbol symbol-mint">↻</span><h3>Pick up where you left off</h3><p>Your changes save as you work, so your latest draft is ready when you are.</p></article>
+          <article class="marketing-feature-card"><span class="feature-symbol symbol-peach">▤</span><h3>Keep work together</h3><p>Search your documents, make copies, and print or export when you need to.</p></article>
+        </div>
+      </section>
+    </main>
 
-        <main class="hero reveal">
-            <section class="content">
-                <div class="eyebrow">Student workspace</div>
-                <h1>Turn your notes into something you can build on.</h1>
-                <p class="subtitle">
-                    Write, save, and organise your work in one smart digital space made for students.
-                </p>
-
-                <div class="actions">
-                    <a href="/signup" class="btn btn-primary">Create an Account</a>
-                    <a href="/login" class="btn btn-secondary">Log In</a>
-                </div>
-            </section>
-        </main>
-
-        <section class="features reveal" aria-label="Website features">
-            <div class="feature-item">
-                <div class="feature-icon">✍️</div>
-                <h3>Write</h3>
-                <p>Create and edit your own notes, essays, and assignments.</p>
-            </div>
-
-            <div class="feature-item">
-                <div class="feature-icon">💾</div>
-                <h3>Save</h3>
-                <p>Keep your work secure in your personal account.</p>
-            </div>
-
-            <div class="feature-item">
-                <div class="feature-icon">🔐</div>
-                <h3>Private</h3>
-                <p>Your files stay connected to you and your study space.</p>
-            </div>
-
-            <div class="feature-item">
-                <div class="feature-icon">📂</div>
-                <h3>Access</h3>
-                <p>Log back in anytime and continue from where you left off.</p>
-            </div>
-        </section>
-    </div>
-
-    <footer class="footer">
-        © 2026 ByteNest | Privacy | Terms | Contact
-    </footer>
-
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <footer class="marketing-footer"><a href="/" class="marketing-brand"><span class="marketing-brand-mark">b</span><span>ByteNest</span></a><span>A little space for big thoughts.</span><a href="/signup">Create your workspace →</a></footer>
+  </div>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

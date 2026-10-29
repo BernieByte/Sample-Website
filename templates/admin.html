@@ -6,13 +6,14 @@
   <title>ByteNest | Admin</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
-<body>
+<body class="admin-body">
   <main class="admin-page">
     <header class="admin-header">
-      <div>
-        <p class="admin-kicker">ByteNest administration</p>
-        <h1>User accounts</h1>
-        <p class="admin-subtitle">Review registered members and account activity.</p>
+      <div class="admin-heading">
+        <a href="/" class="marketing-brand"><span class="marketing-brand-mark">b</span><span>ByteNest</span></a>
+        <p class="admin-kicker">WORKSPACE ADMINISTRATION</p>
+        <h1>Account overview</h1>
+        <p class="admin-subtitle">A private view of registered members and recent sign-ins.</p>
       </div>
       <div class="admin-actions">
         <button id="refreshUsers" class="admin-button">Refresh</button>

@@ -1,38 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ByteNest | Log In</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f5f6f8">
+  <title>Log in | ByteNest</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
-<body>
-  <div class="auth-shell">
-    <div class="auth-card">
-      <h1>Log In</h1>
-      <form id="loginForm" class="auth-form">
-        <label>
-          Username or Email
-          <input type="text" id="loginField" name="login" required />
-        </label>
-
-        <label>
-          Password
-          <input type="password" id="loginPassword" name="password" required />
-        </label>
-
-        <button type="submit">Log In</button>
-      </form>
-      <p class="auth-help">Your browser may ask for location permission to improve the country, state, and town shown to the administrator.</p>
-
-      <p class="auth-switch">
-        Need an account? <a href="/signup">Sign Up</a>
-      </p>
-      <p class="auth-switch"><a href="/forgot-password">Forgot your password?</a></p>
-      <p id="loginMessage" class="message"></p>
-    </div>
-  </div>
-
+<body class="auth-page">
+  <main class="auth-layout">
+    <section class="auth-story">
+      <a href="/" class="auth-brand"><span class="marketing-brand-mark">b</span><span>ByteNest</span></a>
+      <div class="auth-story-copy"><span class="auth-eyebrow">WELCOME BACK</span><h1>Your next thought is waiting.</h1><p>Come back to your notes and pick up right where you left off.</p></div>
+      <div class="auth-story-card"><span class="auth-card-mark">“</span><p>A clear page can make all the difference.</p><span>YOUR BYTE NEST</span></div>
+      <div class="auth-story-decoration decoration-one"></div><div class="auth-story-decoration decoration-two"></div>
+    </section>
+    <section class="auth-main">
+      <div class="auth-panel">
+        <a href="/" class="auth-mobile-brand"><span class="marketing-brand-mark">b</span> ByteNest</a>
+        <div class="auth-panel-heading"><span class="auth-eyebrow">YOUR WORKSPACE</span><h2>Log in</h2><p>Use your username or email to continue.</p></div>
+        <form id="loginForm" class="auth-form modern-auth-form">
+          <label for="loginField">Username or email<input type="text" id="loginField" name="login" autocomplete="username" placeholder="you@example.com" required></label>
+          <label for="loginPassword">Password<input type="password" id="loginPassword" name="password" autocomplete="current-password" placeholder="Enter your password" required></label>
+          <div class="auth-form-meta"><span></span><a href="/forgot-password">Forgot password?</a></div>
+          <button type="submit">Log in <span aria-hidden="true">→</span></button>
+        </form>
+        <p id="loginMessage" class="message" role="status"></p>
+        <p class="auth-switch">New to ByteNest? <a href="/signup">Create an account</a></p>
+        <a href="/" class="auth-back-link">← Back to home</a>
+      </div>
+    </section>
+  </main>
   <script src="{{ url_for('static', filename='auth.js') }}"></script>
 </body>
 </html>

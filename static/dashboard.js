@@ -379,6 +379,23 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
   document.getElementById('fontFamily').addEventListener('change', (event) => runCommand('fontName', event.target.value));
   document.getElementById('fontSize').addEventListener('change', (event) => runCommand('fontSize', event.target.value));
+  document.getElementById('lineSpacing').addEventListener('change', (event) => {
+    restoreSelection();
+    const selection = window.getSelection();
+    let node = selection && selection.rangeCount ? selection.anchorNode : editorEl;
+    if (node && node.nodeType === Node.TEXT_NODE) node = node.parentElement;
+    let block = node && node.closest ? node.closest('p,div,h1,h2,h3,h4,h5,h6,li,blockquote,pre') : null;
+    if (!block || !editorEl.contains(block)) {
+      document.execCommand('formatBlock', false, 'p');
+      const updatedSelection = window.getSelection();
+      node = updatedSelection && updatedSelection.rangeCount ? updatedSelection.anchorNode : editorEl;
+      if (node && node.nodeType === Node.TEXT_NODE) node = node.parentElement;
+      block = node && node.closest ? node.closest('p,div,h1,h2,h3,h4,h5,h6,li,blockquote,pre') : null;
+    }
+    if (block && editorEl.contains(block)) block.style.lineHeight = event.target.value;
+    rememberSelection();
+    scheduleAutosave();
+  });
   document.getElementById('textColor').addEventListener('input', (event) => runCommand('foreColor', event.target.value));
   document.getElementById('highlightColor').addEventListener('input', (event) => {
     restoreSelection();
@@ -395,6 +412,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
   document.getElementById('insertTableBtn').addEventListener('mousedown', (event) => event.preventDefault());
   document.getElementById('insertTableBtn').addEventListener('click', insertTable);
+  document.getElementById('findTextBtn').addEventListener('mousedown', (event) => event.preventDefault());
+  document.getElementById('findTextBtn').addEventListener('click', () => {
+    const query = window.prompt('Find text in this document');
+    if (!query) return;
+    editorEl.focus();
+    if (!window.find(query)) notify('No matching text was found.', true);
+    rememberSelection();
+  });
 
   moreMenuBtn.addEventListener('click', () => {
     const opening = moreMenuEl.hidden;
