@@ -78,7 +78,13 @@ def solve_math_input(raw):
         raise InvalidMathInput("Enter or select a math expression first.")
     if len(raw) > 300:
         raise InvalidMathInput("Please keep the expression under 300 characters.")
-    expression = raw.strip().replace("×", "*").replace("÷", "/").replace("−", "-").replace("^", "**")
+    expression = raw.strip().replace("×", "*").replace("÷", "/").replace("−", "-")
+    superscript_digits = str.maketrans({"⁰": "0", "¹": "1", "²": "2", "³": "3", "⁴": "4", "⁵": "5", "⁶": "6", "⁷": "7", "⁸": "8", "⁹": "9", "⁺": "+", "⁻": "-"})
+    expression = re.sub(
+        r"([A-Za-z0-9)])([⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻]+)",
+        lambda match: f"{match.group(1)}^({match.group(2).translate(superscript_digits)})",
+        expression,
+    ).replace("^", "**")
     # Accept familiar forms such as 2x and 2(x + 1) by inserting explicit multiplication.
     expression = re.sub(r"(?<=[0-9)])\s*(?=[A-Za-z(])", "*", expression)
     expression = re.sub(r"(?<=[A-Za-z])\s*(?=[0-9(])", "*", expression)

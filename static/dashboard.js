@@ -304,6 +304,25 @@ document.addEventListener('DOMContentLoaded', async () => {
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
   })[character]);
 
+  const mathTextFromNode = (node) => {
+    if (node.nodeType === Node.TEXT_NODE) return node.nodeValue || '';
+    if (node.nodeType !== Node.ELEMENT_NODE && node.nodeType !== Node.DOCUMENT_FRAGMENT_NODE) return '';
+    const tag = node.nodeType === Node.ELEMENT_NODE ? node.tagName : '';
+    const contents = Array.from(node.childNodes, mathTextFromNode).join('');
+    if (tag === 'SUP' || (tag === 'SPAN' && node.style.verticalAlign === 'super')) return `^(${contents})`;
+    if (tag === 'SUB' || (tag === 'SPAN' && node.style.verticalAlign === 'sub')) return `_(${contents})`;
+    if (tag === 'BR') return '\n';
+    if (/^(DIV|P|LI|H[1-6]|BLOCKQUOTE|PRE)$/.test(tag)) return `${contents}\n`;
+    return contents;
+  };
+
+  const mathTextFromSelection = (selection) => {
+    const range = selection.getRangeAt(0);
+    return mathTextFromNode(range.cloneContents()).trim();
+  };
+
+  const mathTextFromEditor = () => mathTextFromNode(editorEl).trim();
+
   const insertMathHtml = (markup) => {
     restoreSelection();
     document.execCommand('insertHTML', false, markup);
@@ -397,7 +416,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const selection = window.getSelection();
     const hasEditorSelection = selection && !selection.isCollapsed
       && editorEl.contains(selection.anchorNode) && editorEl.contains(selection.focusNode);
-    const expression = (hasEditorSelection ? selection.toString() : editorEl.innerText).trim();
+    const expression = hasEditorSelection ? mathTextFromSelection(selection) : mathTextFromEditor();
     if (!expression) {
       notify('Type a math expression or equation in the document first.', true);
       return;
