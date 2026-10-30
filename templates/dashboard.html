@@ -53,6 +53,7 @@
         <div class="writer-breadcrumb"><span class="breadcrumb-home">⌂</span><span>/</span><span>My workspace</span><span>/</span><strong id="breadcrumbTitle">Untitled document</strong></div>
         <div class="writer-top-actions">
           <span id="saveStatus" class="writer-save-status" aria-live="polite"><i></i> All changes saved</span>
+          <button id="solveMathBtn" class="writer-button writer-button-solve" type="button" title="Solve selected math or the document expression">Solve</button>
           <button id="saveFileBtn" class="writer-button writer-button-light" type="button" title="Save (Ctrl+S)">Save</button>
           <button id="exportFileBtn" class="writer-button writer-button-light" type="button">Export</button>
           <button id="printFileBtn" class="writer-button writer-button-dark" type="button">Print</button>
@@ -148,6 +149,38 @@
         <div class="toolbar-group">
           <button id="insertLinkBtn" class="format-button" type="button" title="Insert link" aria-label="Insert link">↗</button>
           <button id="insertTableBtn" class="format-button" type="button" title="Insert table" aria-label="Insert table">▦</button>
+          <div class="math-tools-wrap">
+            <button id="mathToolsBtn" class="format-button math-tools-trigger" type="button" title="Math tools" aria-label="Open math tools" aria-expanded="false">ƒx</button>
+            <div id="mathToolsMenu" class="math-tools-menu" role="dialog" aria-label="Math tools" hidden>
+              <div class="math-menu-heading"><strong>Math tools</strong><small>Insert a fraction, root, equation, or symbol.</small></div>
+              <div class="math-action-grid">
+                <button id="insertFractionBtn" type="button"><span>½</span> Fraction</button>
+                <button id="insertRootBtn" type="button"><span>√</span> Root</button>
+                <button id="insertEquationBtn" type="button"><span>∑</span> Equation line</button>
+              </div>
+              <div class="math-menu-label">COMMON SYMBOLS</div>
+              <div class="math-symbol-grid" aria-label="Common math symbols">
+                <button type="button" data-math-symbol="π" aria-label="Pi">π</button>
+                <button type="button" data-math-symbol="θ" aria-label="Theta">θ</button>
+                <button type="button" data-math-symbol="α" aria-label="Alpha">α</button>
+                <button type="button" data-math-symbol="β" aria-label="Beta">β</button>
+                <button type="button" data-math-symbol="Δ" aria-label="Delta">Δ</button>
+                <button type="button" data-math-symbol="Ω" aria-label="Omega">Ω</button>
+                <button type="button" data-math-symbol="±" aria-label="Plus or minus">±</button>
+                <button type="button" data-math-symbol="×" aria-label="Multiply">×</button>
+                <button type="button" data-math-symbol="÷" aria-label="Divide">÷</button>
+                <button type="button" data-math-symbol="≠" aria-label="Not equal">≠</button>
+                <button type="button" data-math-symbol="≤" aria-label="Less than or equal">≤</button>
+                <button type="button" data-math-symbol="≥" aria-label="Greater than or equal">≥</button>
+                <button type="button" data-math-symbol="≈" aria-label="Approximately equal">≈</button>
+                <button type="button" data-math-symbol="∞" aria-label="Infinity">∞</button>
+                <button type="button" data-math-symbol="∑" aria-label="Summation">∑</button>
+                <button type="button" data-math-symbol="∫" aria-label="Integral">∫</button>
+                <button type="button" data-math-symbol="∂" aria-label="Partial derivative">∂</button>
+                <button type="button" data-math-symbol="°" aria-label="Degrees">°</button>
+              </div>
+            </div>
+          </div>
           <button class="format-button" type="button" data-command="insertHorizontalRule" title="Insert horizontal line" aria-label="Insert horizontal line">―</button>
           <button id="findTextBtn" class="format-button" type="button" title="Find in document" aria-label="Find in document">⌕</button>
           <button class="format-button" type="button" data-command="removeFormat" title="Clear formatting" aria-label="Clear formatting">Tx</button>

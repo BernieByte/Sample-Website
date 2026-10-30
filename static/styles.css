@@ -1166,6 +1166,15 @@ h1 {
   background: #f9f9fb;
 }
 
+.writer-button-solve {
+  border-color: #dcdcfb;
+  background: #f1f0ff;
+  color: #4f55c7;
+}
+.writer-button-solve:hover { border-color: #c7c6f5; background: #e8e7ff; }
+.writer-button-solve:disabled { cursor: wait; opacity: 0.7; }
+.math-solve-result { margin-top: 1.2em; padding: 0.55em 0.8em; border-left: 3px solid #7773e6; background: #f6f5ff; }
+
 .writer-button-dark {
   background: #2f3541;
   color: white;
@@ -1311,6 +1320,57 @@ h1 {
   background: #eff0ff;
   color: #4d58cc;
 }
+
+.math-tools-wrap { position: relative; flex: 0 0 auto; }
+.math-tools-trigger { color: #5661ca; font-size: 0.75rem; font-style: italic; font-weight: 750; }
+.math-tools-menu {
+  position: fixed;
+  z-index: 100;
+  width: min(310px, calc(100vw - 24px));
+  max-height: min(520px, 74vh);
+  padding: 14px;
+  overflow: auto;
+  border: 1px solid #e1e3ea;
+  border-radius: 11px;
+  background: #fff;
+  color: #3b414e;
+  box-shadow: 0 16px 42px rgba(30, 38, 55, 0.18);
+}
+.math-menu-heading { display: flex; flex-direction: column; gap: 4px; margin-bottom: 12px; }
+.math-menu-heading strong { font-size: 0.83rem; font-weight: 700; }
+.math-menu-heading small { color: #858c99; font-size: 0.68rem; }
+.math-action-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin-bottom: 14px; }
+.math-action-grid button {
+  display: flex;
+  min-height: 52px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 3px;
+  border: 1px solid #e8e9ef;
+  border-radius: 7px;
+  background: #fafaff;
+  color: #555d6b;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.63rem;
+}
+.math-action-grid button:hover { border-color: #ccd0f4; background: #f2f3ff; color: #4f5acb; }
+.math-action-grid button span { color: #525fcf; font-size: 1.1rem; line-height: 1; }
+.math-menu-label { margin: 0 0 7px; color: #9aa0aa; font-size: 0.55rem; font-weight: 750; letter-spacing: 0.12em; }
+.math-symbol-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 5px; }
+.math-symbol-grid button {
+  display: grid;
+  min-height: 33px;
+  place-items: center;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: #f4f5f8;
+  color: #444b58;
+  cursor: pointer;
+  font: 1rem Georgia, "Times New Roman", serif;
+}
+.math-symbol-grid button:hover { border-color: #d9dcf7; background: #eeeefe; color: #4e5ad0; }
 
 .format-strong { font-weight: 800; }
 .format-italic { font-family: Georgia, serif; font-style: italic; }

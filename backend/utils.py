@@ -47,7 +47,7 @@ def _safe_document_style(style):
             if family_names and all(family.lower() in allowed_names for family in family_names):
                 css_families = [f"'{family}'" if " " in family else family for family in family_names]
                 safe.append(f"{name}:{','.join(css_families)}")
-        elif name == "font-size" and re.fullmatch(r"(?:[1-9]\d?|1\d\d)(?:pt|px|em|rem|%)", value):
+        elif name == "font-size" and re.fullmatch(r"(?:[1-9]\d?|1\d\d)(?:\.\d{1,2})?(?:pt|px|em|rem|%)", value):
             safe.append(f"{name}:{value}")
         elif name == "font-weight" and value in {"normal", "bold", "400", "500", "600", "700", "800", "900"}:
             safe.append(f"{name}:{value}")
@@ -57,9 +57,21 @@ def _safe_document_style(style):
             safe.append(f"{name}:{value}")
         elif name == "text-decoration" and value in {"underline", "line-through", "none"}:
             safe.append(f"{name}:{value}")
-        elif name == "vertical-align" and value in {"sub", "super", "baseline"}:
+        elif name == "vertical-align" and value in {"sub", "super", "baseline", "middle", "top", "bottom"}:
             safe.append(f"{name}:{value}")
         elif name == "line-height" and re.fullmatch(r"[1-3](?:\.\d{1,2})?", value):
+            safe.append(f"{name}:{value}")
+        elif name == "display" and value in {"inline-flex", "inline-block"}:
+            safe.append(f"{name}:{value}")
+        elif name == "flex-direction" and value == "column":
+            safe.append(f"{name}:{value}")
+        elif name == "align-items" and value == "center":
+            safe.append(f"{name}:{value}")
+        elif name in {"border-top", "border-bottom"} and re.fullmatch(r"[1-2]px solid currentcolor", value):
+            safe.append(f"{name}:{value}")
+        elif name == "padding" and re.fullmatch(r"(?:0|0?\.\d{1,2}(?:em|rem|px))(?:\s+(?:0|0?\.\d{1,2}(?:em|rem|px))){0,3}", value):
+            safe.append(f"{name}:{value}")
+        elif name == "white-space" and value == "nowrap":
             safe.append(f"{name}:{value}")
     return ";".join(safe)
 

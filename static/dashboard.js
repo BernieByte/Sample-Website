@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const breadcrumbTitleEl = document.getElementById('breadcrumbTitle');
   const editorEl = document.getElementById('editor');
   const saveFileBtn = document.getElementById('saveFileBtn');
+  const solveMathBtn = document.getElementById('solveMathBtn');
   const exportFileBtn = document.getElementById('exportFileBtn');
   const duplicateFileBtn = document.getElementById('duplicateFileBtn');
   const deleteFileBtn = document.getElementById('deleteFileBtn');
@@ -18,6 +19,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   const documentCountEl = document.getElementById('documentCount');
   const moreMenuBtn = document.getElementById('moreMenuBtn');
   const moreMenuEl = document.getElementById('moreMenu');
+  const mathToolsBtn = document.getElementById('mathToolsBtn');
+  const mathToolsMenu = document.getElementById('mathToolsMenu');
   const changePasswordForm = document.getElementById('changePasswordForm');
   const passwordMessageEl = document.getElementById('passwordMessage');
   const toastRegion = document.getElementById('toastRegion');
@@ -297,6 +300,45 @@ document.addEventListener('DOMContentLoaded', async () => {
     scheduleAutosave();
   };
 
+  const escapeMathText = (value) => value.replace(/[&<>"']/g, (character) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+  })[character]);
+
+  const insertMathHtml = (markup) => {
+    restoreSelection();
+    document.execCommand('insertHTML', false, markup);
+    rememberSelection();
+    updateCounts();
+    scheduleAutosave();
+    mathToolsMenu.hidden = true;
+    mathToolsBtn.setAttribute('aria-expanded', 'false');
+  };
+
+  const insertFraction = () => {
+    const numerator = window.prompt('Enter the numerator', 'a + b');
+    if (numerator === null) return;
+    const denominator = window.prompt('Enter the denominator', 'c');
+    if (denominator === null) return;
+    const fraction = `<span style="display:inline-flex;flex-direction:column;align-items:center;text-align:center;vertical-align:middle;line-height:1.15"><span style="padding:0 0.22em;border-bottom:1px solid currentColor">${escapeMathText(numerator)}</span><span style="padding:0 0.22em">${escapeMathText(denominator)}</span></span>`;
+    insertMathHtml(fraction);
+  };
+
+  const insertRoot = () => {
+    const expression = window.prompt('Enter the expression under the root', 'x + 1');
+    if (expression === null) return;
+    const index = window.prompt('Root index (leave blank for a square root)', '');
+    if (index === null) return;
+    const indexMarkup = index.trim() ? `<sup>${escapeMathText(index.trim())}</sup>` : '';
+    const root = `<span style="display:inline-flex;align-items:center;vertical-align:middle;white-space:nowrap">${indexMarkup}<span style="font-size:1.25em">√</span><span style="border-top:1px solid currentColor;padding:0 0.14em">${escapeMathText(expression)}</span></span>`;
+    insertMathHtml(root);
+  };
+
+  const insertEquation = () => {
+    const expression = window.prompt('Enter one equation or step of working', 'x + 2 = 5');
+    if (expression === null || !expression.trim()) return;
+    insertMathHtml(`<div style="text-align:center;font-size:14pt;line-height:1.8">${escapeMathText(expression.trim())}</div><p><br></p>`);
+  };
+
   const insertTable = () => {
     const rowsInput = window.prompt('How many rows? (1–12)', '3');
     if (rowsInput === null) return;
@@ -350,6 +392,42 @@ document.addEventListener('DOMContentLoaded', async () => {
     createNewFile();
   });
   saveFileBtn.addEventListener('click', saveFile);
+  solveMathBtn.addEventListener('mousedown', (event) => event.preventDefault());
+  solveMathBtn.addEventListener('click', async () => {
+    const selection = window.getSelection();
+    const hasEditorSelection = selection && !selection.isCollapsed
+      && editorEl.contains(selection.anchorNode) && editorEl.contains(selection.focusNode);
+    const expression = (hasEditorSelection ? selection.toString() : editorEl.innerText).trim();
+    if (!expression) {
+      notify('Type a math expression or equation in the document first.', true);
+      return;
+    }
+
+    solveMathBtn.disabled = true;
+    solveMathBtn.textContent = 'Solving…';
+    try {
+      const result = await fetchJson('/api/math/solve', {
+        method: 'POST',
+        body: JSON.stringify({ expression }),
+      });
+      const line = document.createElement('p');
+      line.className = 'math-solve-result';
+      const label = document.createElement('strong');
+      label.textContent = 'Solution: ';
+      line.append(label, document.createTextNode(result.answer));
+      editorEl.appendChild(line);
+      line.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      rememberSelection();
+      updateCounts();
+      scheduleAutosave();
+      notify('Solution added to your document.');
+    } catch (error) {
+      notify(error.message || 'This input could not be solved as written.', true);
+    } finally {
+      solveMathBtn.disabled = false;
+      solveMathBtn.textContent = 'Solve';
+    }
+  });
   exportFileBtn.addEventListener('click', exportHtml);
   document.getElementById('printFileBtn').addEventListener('click', () => window.print());
   duplicateFileBtn.addEventListener('click', duplicateFile);
@@ -420,6 +498,36 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!window.find(query)) notify('No matching text was found.', true);
     rememberSelection();
   });
+  mathToolsBtn.addEventListener('mousedown', (event) => event.preventDefault());
+  mathToolsBtn.addEventListener('click', () => {
+    const opening = mathToolsMenu.hidden;
+    mathToolsMenu.hidden = !opening;
+    mathToolsBtn.setAttribute('aria-expanded', String(opening));
+    if (opening) {
+      const rect = mathToolsBtn.getBoundingClientRect();
+      const menuWidth = Math.min(310, window.innerWidth - 24);
+      const left = Math.min(Math.max(12, rect.left), window.innerWidth - menuWidth - 12);
+      const menuHeight = mathToolsMenu.getBoundingClientRect().height;
+      const below = rect.bottom + 8;
+      const top = below + menuHeight < window.innerHeight - 10
+        ? below
+        : Math.max(10, rect.top - menuHeight - 8);
+      mathToolsMenu.style.left = `${left}px`;
+      mathToolsMenu.style.top = `${top}px`;
+    }
+  });
+  [
+    document.getElementById('insertFractionBtn'),
+    document.getElementById('insertRootBtn'),
+    document.getElementById('insertEquationBtn'),
+    ...document.querySelectorAll('[data-math-symbol]'),
+  ].forEach((button) => button.addEventListener('mousedown', (event) => event.preventDefault()));
+  document.getElementById('insertFractionBtn').addEventListener('click', insertFraction);
+  document.getElementById('insertRootBtn').addEventListener('click', insertRoot);
+  document.getElementById('insertEquationBtn').addEventListener('click', insertEquation);
+  document.querySelectorAll('[data-math-symbol]').forEach((button) => {
+    button.addEventListener('click', () => runCommand('insertText', button.dataset.mathSymbol));
+  });
 
   moreMenuBtn.addEventListener('click', () => {
     const opening = moreMenuEl.hidden;
@@ -431,6 +539,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       moreMenuEl.hidden = true;
       moreMenuBtn.setAttribute('aria-expanded', 'false');
     }
+    if (!event.target.closest('.math-tools-wrap')) {
+      mathToolsMenu.hidden = true;
+      mathToolsBtn.setAttribute('aria-expanded', 'false');
+    }
+  });
+  document.querySelector('.writer-canvas-scroll').addEventListener('scroll', () => {
+    mathToolsMenu.hidden = true;
+    mathToolsBtn.setAttribute('aria-expanded', 'false');
   });
 
   document.addEventListener('keydown', (event) => {
@@ -442,6 +558,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     if ((event.ctrlKey || event.metaKey) && key === 'k') {
       event.preventDefault();
       fileSearchEl.focus();
+    }
+    if (key === 'escape') {
+      mathToolsMenu.hidden = true;
+      mathToolsBtn.setAttribute('aria-expanded', 'false');
     }
   });
 

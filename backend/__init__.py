@@ -7,6 +7,7 @@ from .db import init_db
 from .routes.admin import admin_bp
 from .routes.auth import auth_bp
 from .routes.files import files_bp
+from .routes.math import math_bp
 from .routes.views import views_bp
 
 
@@ -26,6 +27,7 @@ def create_app(config_overrides=None):
     app.register_blueprint(admin_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(files_bp)
+    app.register_blueprint(math_bp)
     app.register_blueprint(views_bp)
 
     return app
